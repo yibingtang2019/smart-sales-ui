@@ -9,7 +9,7 @@
                         <b-nav-item-dropdown right>
                             <template slot="button-content"><em style="font-style:normal">{{menuItem}}</em></template>
                             <b-dropdown-item href="#" @click="product">产品信息管理</b-dropdown-item>
-                            <b-dropdown-item href="#" @click="homeSort">首页产品排序</b-dropdown-item>
+                            <b-dropdown-item href="#" @click="homeSort">产品排序管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="sales">销售信息管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="profile">登录用户</b-dropdown-item>
                             <b-dropdown-item href="#" @click="quit">退出</b-dropdown-item>

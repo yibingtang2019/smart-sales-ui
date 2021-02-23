@@ -26,8 +26,8 @@ export default new Router({
                 },
                 {
                     path: '/home-sort',
-                    component: resolve => require(['components/page/product/home-sort.vue'], resolve),
-                    meta: { title: '首页产品排序', auth: true }
+                    component: resolve => require(['components/page/product/product-sort.vue'], resolve),
+                    meta: { title: '产品排序管理', auth: true }
                 },
                 {
                     path: '/sale',
