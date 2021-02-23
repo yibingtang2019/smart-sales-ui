@@ -43,6 +43,10 @@ export const setPrimaryPicture = (pictureId, resolve) => {
     return request(`${process.env.VUE_APP_API_URL}/product/picture/${pictureId}`, "put", {}, resolve);
 }
 
+export const updatePictures = (data, resolve) => {
+    return request(`${process.env.VUE_APP_API_URL}/product/pictures/update`, "put", data, resolve);
+}
+
 export const deletePicture = (pictureId, resolve) => {
     return request(`${process.env.VUE_APP_API_URL}/product/picture/${pictureId}`, "delete", {}, resolve);
 }

@@ -4,12 +4,6 @@
             <b-row>
                 <div class="card" style="margin:5px 20px;width:100%">
                     <div class="card-body">
-                        <b-link href="#" 
-                            v-b-toggle.editor
-                            @click="createProduct"
-                            style="margin-bottom:20px;font-size:14px;">
-                            新建
-                        </b-link>
                         <b-form @submit="onSubmit">
                             <b-form-group id="groupSearch" label="产品名称:" label-for="search">
                                 <b-form-input id="search"
@@ -33,8 +27,15 @@
                                 <b-button type="submit" variant="primary" style="margin-right:5px;">
                                     查询
                                 </b-button>
-                                <b-button type="button" @click="onReset" variant="secondary" style="margin-left:5px;">
+                                <b-button type="button" @click="onReset" variant="secondary" style="margin:0px 5px;">
                                     重置
+                                </b-button>
+                                <b-button
+                                    v-b-toggle.editor
+                                    @click="createProduct"
+                                    variant="warning"
+                                    style="margin-left:5px;">
+                                    新建
                                 </b-button>
                             </div>
                         </b-form>
@@ -65,7 +66,7 @@
                             </div>
                             <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:5px;">
                                 <div style="margin-right:5px;width:150px;">指导价格:&nbsp;{{ product.price }}</div>
-                                <div style="width:150px;">实际价格:&nbsp;{{ product.price_discount }}</div>
+                                <div style="width:150px;">实际价格:&nbsp;{{ product.price_sale }}</div>
                             </div>
                             <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:5px;">
                                 <div style="margin-right:5px;width:150px;">库存数量:&nbsp;{{ product.count_store }}</div>
@@ -179,18 +180,18 @@
                             价格不能小于零
                         </b-form-invalid-feedback>
                     </b-form-group>
-                    <b-form-group id="groupPriceDiscount" label="实际价格:" label-for="priceDiscount">
+                    <b-form-group id="groupPriceDiscount" label="实际价格:" label-for="priceSale">
                         <b-form-input
-                            id="priceDiscount"
+                            id="priceSale"
                             type= "number"
-                            v-model.number="editForm.priceDiscount"
+                            v-model.number="editForm.priceSale"
                             placeholder="请输入实际价格"
                             @click.native="selectThis($event)">
                         </b-form-input>
-                        <b-form-invalid-feedback :state="checkNumber(this.editForm.priceDiscount)">
+                        <b-form-invalid-feedback :state="checkNumber(this.editForm.priceSale)">
                             格式不正确
                         </b-form-invalid-feedback>
-                        <b-form-invalid-feedback :state="checkZero(this.editForm.priceDiscount)">
+                        <b-form-invalid-feedback :state="checkZero(this.editForm.priceSale)">
                             价格不能小于零
                         </b-form-invalid-feedback>
                     </b-form-group>
@@ -279,7 +280,7 @@
                 </template>
                 <div v-if="pictures.length > 0" 
                     style="width:100%;overflow-y:auto;margin:10px;text-align:center" >
-                    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;">
+                    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;" class="pictures">
                         <div v-for="picture in pictures" :key="picture.id"
                             style="width:320px;height:auto;margin:10px;diaplay:relative">
                             <div>
@@ -302,6 +303,11 @@
                 <div v-else>
                     <h5>没有图片</h5>
                 </div>
+                <div style="text-align:right;margin-right:20px;">
+                    <b-button type="button" @click="saveSort" variant="primary">
+                        保存排序
+                    </b-button>
+                </div>
             </div>
         </b-sidebar>
     </b-container>
@@ -313,6 +319,8 @@ import {
     MessageBox,
     Switch
 } from 'mint-ui';
+
+import Sortable from 'sortablejs';
 
 import {
     getOptionsOnSale,
@@ -328,6 +336,7 @@ import {
     getPictures,
     uploadPicture,
     setPrimaryPicture,
+    updatePictures,
     deletePicture
 } from "api/product";
 
@@ -357,7 +366,7 @@ export default {
                 size: 0,
                 dimension: '',
                 price: 0,
-                priceDiscount: 0,
+                priceSale: 0,
                 countStore: 0,
                 countSale: 0,
                 isOnSale: false,
@@ -474,7 +483,7 @@ export default {
             this.editForm.size = product.size;
             this.editForm.dimension = product.dimension;
             this.editForm.price = product.price;
-            this.editForm.priceDiscount = product.price_discount;
+            this.editForm.priceSale = product.price_sale;
             this.editForm.countStore = product.count_store;
             this.editForm.countSale = product.count_sale;
             this.editForm.isOnSale = product.is_on_sale;
@@ -490,16 +499,16 @@ export default {
                 valid = this.checkNumber(this.editForm.price);
             }
             if(valid) {
-                let price_discount = parseFloat(this.editForm.priceDiscount) == 0 ? 
+                let price_sale = parseFloat(this.editForm.priceSale) == 0 ? 
                                      parseFloat(this.editForm.price) : 
-                                     parseFloat(this.editForm.priceDiscount);
+                                     parseFloat(this.editForm.priceSale);
                 let saveObject = {
                     'product_name': this.editForm.productName,
                     'category_id': parseInt(this.editForm.category),
                     'size': parseInt(this.editForm.size),
                     'dimension': this.editForm.dimension,
                     'price': parseFloat(this.editForm.price),
-                    'price_discount': price_discount,
+                    'price_sale': price_sale,
                     'count_store': parseInt(this.editForm.countStore),
                     'count_sale': parseInt(this.editForm.countSale),
                     'is_on_sale': this.editForm.isOnSale,
@@ -539,7 +548,7 @@ export default {
             this.editForm.size = null;
             this.editForm.dimension = '';
             this.editForm.price = 0;
-            this.editForm.priceDiscount = 0;
+            this.editForm.priceSale = 0;
             this.editForm.countStore = 0;
             this.editForm.countSale = 0;
             this.editForm.isOnSale = false;
@@ -559,6 +568,16 @@ export default {
                             picture.picture_url = getPicturePath(picture.picture_url);
                         });
                     }
+                    this.$nextTick(() => {
+                        const el = document.querySelectorAll('.pictures')[0];
+                        let self = this;
+                        Sortable.create(el, {
+                            onEnd({ newIndex, oldIndex }) {
+                                const targetRow = self.pictures.splice(oldIndex, 1)[0];
+                                self.pictures.splice(newIndex, 0, targetRow);
+                            }
+                        });
+                    });
                 }
                 Indicator.close();
             }, error => {
@@ -622,6 +641,28 @@ export default {
                     }
                 });
             }).catch(()=>{});
+        },
+        saveSort() {
+            if(this.pictures.length == 0) {
+                this.$message({
+                    type: 'warning',
+                    message: '图片列表为空!'
+                });
+                return;
+            }
+            let saveItems = [];
+            this.pictures.forEach((item, index) => {
+                saveItems.push(item.id);
+            });
+            let saveObject = { 'pictures': saveItems };
+            updatePictures(saveObject, response => {
+                if (response.status == 200) {
+                    MessageBox('保存成功', '保存成功');
+                    this.showUploaded(this.productCodeUploader);
+                } else {
+                    MessageBox('保存失败', '保存失败');
+                }
+            });
         }
     }
 };

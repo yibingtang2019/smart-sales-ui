@@ -2,7 +2,7 @@
     <b-container>
         <div style="margin:5px;">
             <div style="text-align:right;margin-right:20px;">
-                <span style="margin-right:10px;font-size:14px;line-height:14px;color:#6c757d">
+                <span style="margin-right:10px;margin-bottom:5px;font-size:12px;line-height:14px;color:#6c757d" class="d-none d-sm-block">
                     提示：拖拽图片卡片进行排序
                 </span>
                 <b-button type="button" @click="search" variant="primary" style="margin-right:5px;">
@@ -13,12 +13,12 @@
                 </b-button>
             </div>
             <div v-if="products.length" 
-                style="display: flex;flex-wrap: wrap;margin:5px;"
+                style="display: flex;flex-wrap:wrap;justify-content:space-between;"
                 class="products">
                 <div v-for="product in products" :key="product.id"
                     style="cursor:pointer;margin:5px;">
-                    <b-img :src="product.picture_url" thumbnail style="width:260px;height:auto;"/>
-                    <div border style="width:260px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
+                    <b-img :src="product.picture_url" thumbnail style="width:200px;height:auto;"/>
+                    <div border style="width:200px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
                         {{ product.product_code }}
                     </div>
                 </div>
