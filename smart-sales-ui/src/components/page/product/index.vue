@@ -23,6 +23,12 @@
                                     :options="optionsCategory">
                                 </b-form-select>
                             </b-form-group>
+                            <b-form-group id="groupSize" label="大小:" label-for="size">
+                                <b-form-select id="size"
+                                    v-model="form.size" 
+                                    :options="optionsSize">
+                                </b-form-select>
+                            </b-form-group>
                             <div style="text-align:right">
                                 <b-button type="submit" variant="primary" style="margin-right:5px;">
                                     查询
@@ -75,31 +81,41 @@
                             <div style="margin-bottom:5px;">
                                 <div style="margin-right:5px;width:300px;">尺寸:&nbsp;{{ product.dimension }}</div>
                             </div>
-                            <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
-                                <b-badge variant="success" v-if="product.is_on_sale==true">在售</b-badge>
-                                <b-badge variant="warning" v-if="product.is_on_sale==false">已下架</b-badge>
+                            <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:5px;">
+                                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
+                                    <b-badge variant="success" v-if="product.is_on_sale==true">在售产品</b-badge>
+                                    <b-badge variant="danger" v-if="product.is_on_sale==false">下架产品</b-badge>
+                                </div>
+                                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
+                                    <b-badge variant="primary" v-if="product.is_home==true">首页显示</b-badge>
+                                    <b-badge variant="secondary" v-if="product.is_home==false">列表显示</b-badge>
+                                </div>
+                                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;" v-if="product.is_recommend==true">
+                                    <b-badge variant="info" v-if="product.is_recommend==true">推荐产品</b-badge>
+                                </div>
+                                <div style="display:inline-block;margin-right:10px;margin-bottom:5px;" v-if="product.is_new==true">
+                                    <b-badge variant="warning" v-if="product.is_new==true">新产品</b-badge>
+                                </div>
                             </div>
-                            <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
-                                <b-badge variant="primary" v-if="product.is_home==true">首页显示</b-badge>
-                                <b-badge variant="secondary" v-if="product.is_home==false">列表页显示</b-badge>
+                            <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:5px;">
+                                <b-link href="#"
+                                    v-b-toggle.editor
+                                    @click="editProduct(product.id, product)"
+                                    style="font-size:13px;margin-right:10px;">
+                                    编辑
+                                </b-link>
+                                <b-link href="#"
+                                    v-b-modal.modalUploader
+                                    @click="showUploaded(product.product_code)"
+                                    style="font-size:13px;margin-right:10px;">
+                                    上传图片
+                                </b-link>
+                                <b-link href="#"
+                                    @click="deleteProduct(product.product_code)"
+                                    style="font-size:13px;color:red;">
+                                    删除
+                                </b-link>
                             </div>
-                            <b-link href="#"
-                                v-b-toggle.editor
-                                @click="editProduct(product.id, product)"
-                                style="font-size:13px;margin-right:10px;">
-                                编辑
-                            </b-link>
-                            <b-link href="#"
-                                v-b-modal.modalUploader
-                                @click="showUploaded(product.product_code)"
-                                style="font-size:13px;margin-right:10px;">
-                                上传图片
-                            </b-link>
-                            <b-link href="#"
-                                @click="deleteProduct(product.product_code)"
-                                style="font-size:13px;color:red;">
-                                删除
-                            </b-link >
                         </b-card>
                     </b-col>
                 </div>
@@ -243,6 +259,20 @@
                             max-rows="12">
                         </b-form-textarea>
                     </b-form-group>
+                    <b-form-group id="groupCreatedTime" label="创建时间:" label-for="createdTime">
+                        <b-form-input
+                            id="createdTime"
+                            v-model.number="editForm.createdTime"
+                            :disabled="disabled">
+                        </b-form-input>
+                    </b-form-group>
+                    <b-form-group id="groupUpdatedTime" label="修改时间:" label-for="updatedTime">
+                        <b-form-input
+                            id="updatedTime"
+                            v-model.number="editForm.updatedTime"
+                            :disabled="disabled">
+                        </b-form-input>
+                    </b-form-group>
                 </b-form>
             </div>
             <template>
@@ -348,11 +378,13 @@ export default {
     data() {
         return {
             loading: true,
+            disabled: true,
             products: [],
             form: {
                 search: null,
                 sort_sale: null,
-                category: null
+                category: null,
+                size: null
             },
             optionsOnSale: [],
             optionsCategory: [],
@@ -373,7 +405,9 @@ export default {
                 isHome: false,
                 isNew: false,
                 isRecommend: false,
-                description: ''
+                description: '',
+                createdTime: '',
+                updatedTime: ''
             },
             showUploador: false,
             productCodeUploader: '',
@@ -383,6 +417,9 @@ export default {
             currentPage: 1,
             pageSize: 20
         };
+    },
+    filters: {
+        
     },
     mounted() {
         this.optionsOnSale = getOptionsOnSale();
@@ -417,6 +454,25 @@ export default {
             if(keyNum == 189 || keyNum == 190 || keyNum == 110 || keyNum == 109) {
                 e.target.value = '';
             }
+        },
+        dateFormat: function(time) {
+            if (time === null || time.length === 0) {
+                return '-';
+            }
+            var t = new Date(time);
+            var year = t.getFullYear();
+            var month = t.getMonth() + 1;
+            var day = t.getDate();
+            var hour = t.getHours();
+            var min = t.getMinutes();
+            var sec = t.getSeconds();
+            var newTime = year + '-' +
+                (month < 10 ? '0' + month : month) + '-' +
+                (day < 10 ? '0' + day : day) + ' ' +
+                (hour < 10 ? '0' + hour : hour) + ':' +
+                (min < 10 ? '0' + min : min) + ':' +
+                (sec < 10 ? '0' + sec : sec);
+            return newTime;
         },
         getCategoryName(category_id) {
             let categories = this.optionsCategory.filter(item => item.value == category_id);
@@ -459,6 +515,7 @@ export default {
             return {
                 "sort_sale": this.form.sort_sale == null ? '' : this.form.sort_sale,
                 "category_id": this.form.category == null ? 0 : parseInt(this.form.category),
+                "size": this.form.size == null ? 0 : parseInt(this.form.size),
                 "search": this.form.search == null ? '' : this.form.search,
                 "page_size": this.pageSize,
                 "current_page": this.currentPage
@@ -467,6 +524,7 @@ export default {
         onReset() {
             this.form.sort_sale = null;
             this.form.category = null;
+            this.form.size = null;
             this.form.search = '';
             this.pageSize = 20;
             this.currentPage = 1;
@@ -491,6 +549,8 @@ export default {
             this.editForm.isNew = product.is_new;
             this.editForm.isRecommend = product.is_recommend;
             this.editForm.description = product.description;
+            this.editForm.createdTime = this.dateFormat(product.create_time);
+            this.editForm.updatedTime = this.dateFormat(product.update_time);
         },
         saveProduct() {
             let form = this.$refs['editorForm'];
@@ -556,6 +616,8 @@ export default {
             this.editForm.isNew = false;
             this.editForm.isRecommend = false;
             this.editForm.description = '';
+            this.editForm.createdTime = '';
+            this.editForm.updatedTime = '';
         },
         showUploaded(productCode) {
             this.productCodeUploader = productCode;
@@ -669,5 +731,7 @@ export default {
 </script>
 
 <style scoped>
-
+.badge {
+    padding: 4px 8px;
+}
 </style>
