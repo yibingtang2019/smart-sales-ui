@@ -78,10 +78,10 @@
                                 <div style="margin-right:5px;width:150px;">库存数量:&nbsp;{{ product.count_store }}</div>
                                 <div style="width:150px;">销售数量:&nbsp;{{ product.count_sale }}</div>
                             </div>
-                            <div style="margin-bottom:5px;">
+                            <div style="margin-bottom:10px;">
                                 <div style="margin-right:5px;width:300px;">尺寸:&nbsp;{{ product.dimension }}</div>
                             </div>
-                            <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:5px;">
+                            <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:10px;">
                                 <div style="display:inline-block;margin-right:10px;margin-bottom:5px;">
                                     <b-badge variant="success" v-if="product.is_on_sale==true">在售产品</b-badge>
                                     <b-badge variant="danger" v-if="product.is_on_sale==false">下架产品</b-badge>
@@ -97,7 +97,7 @@
                                     <b-badge variant="warning" v-if="product.is_new==true">新产品</b-badge>
                                 </div>
                             </div>
-                            <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:5px;">
+                            <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:10px;">
                                 <b-link href="#"
                                     v-b-toggle.editor
                                     @click="editProduct(product.id, product)"
@@ -107,13 +107,35 @@
                                 <b-link href="#"
                                     v-b-modal.modalUploader
                                     @click="showUploaded(product.product_code)"
-                                    style="font-size:13px;margin-right:10px;">
+                                    style="font-size:13px;margin-right:25px;">
                                     上传图片
                                 </b-link>
                                 <b-link href="#"
                                     @click="deleteProduct(product.product_code)"
                                     style="font-size:13px;color:red;">
                                     删除
+                                </b-link>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:flex-start;">
+                                <b-link href="#"
+                                    @click="toggleProduct('sale', product.product_code, product.is_on_sale)"
+                                    style="font-size:13px;margin-right:10px;">
+                                    {{ product.is_on_sale == true ? '下架' : '上架' }}
+                                </b-link>
+                                <b-link href="#"
+                                    @click="toggleProduct('home', product.product_code, product.is_home)"
+                                    style="font-size:13px;margin-right:10px;">
+                                    {{ product.is_home == true ? '设为列表页' : '设为首页' }}
+                                </b-link>
+                                <b-link href="#"
+                                    @click="toggleProduct('recommend', product.product_code, product.is_recommend)"
+                                    style="font-size:13px;margin-right:10px;">
+                                    {{ product.is_recommend == true ? '设为不推荐' : '设为推荐' }}
+                                </b-link>
+                                <b-link href="#"
+                                    @click="toggleProduct('new', product.product_code, product.is_new)"
+                                    style="font-size:13px;">
+                                    {{ product.is_new == true ? '设为普通产品' : '设为新产品' }}
                                 </b-link>
                             </div>
                         </b-card>
@@ -362,6 +384,7 @@ import {
     getProductList,
     saveProduct,
     editProduct,
+    updateProduct,
     deleteProduct,
     getPictures,
     uploadPicture,
@@ -491,7 +514,6 @@ export default {
             }
             Indicator.open({ text: '加载中...', spinnerType: 'fading-circle' });
             let params = this.getFilter();
-            console.log(params);
             getProductList(params, response => {
                 if(response.status == 200) {
                     this.products = response.data.data;
@@ -502,7 +524,6 @@ export default {
                             }
                         });
                     }
-                    console.log(this.products);
                     this.total = response.data.total;
                 }
                 Indicator.close();
@@ -619,6 +640,26 @@ export default {
             this.editForm.createdTime = '';
             this.editForm.updatedTime = '';
         },
+        toggleProduct(method, productCode, isValue) {
+            MessageBox.confirm('确定执行此操作?').then(action => {
+                let saveObject = { 'method': method };
+                if(method == 'sale') {
+                    saveObject.is_on_sale = !isValue;
+                } else if(method == 'home') {
+                    saveObject.is_home = !isValue;
+                } else if(method == 'recommend') {
+                    saveObject.is_recommend = !isValue;
+                } else if(method == 'new') {
+                    saveObject.is_new = !isValue;
+                }
+                updateProduct(productCode, saveObject, response => {
+                    if(response.status == 200) {
+                        MessageBox('保存成功', '保存成功');
+                        this.search();
+                    }
+                });
+            }).catch(()=>{});
+        },
         showUploaded(productCode) {
             this.productCodeUploader = productCode;
             Indicator.open({ text: '加载中...', spinnerType: 'fading-circle' });
@@ -685,7 +726,7 @@ export default {
             this.showUploador = false;
         },
         deleteProduct(productCode) {
-            MessageBox.confirm('确定执行此操作?').then(action => {
+            MessageBox.confirm('确定删除此产品? 请注意此项操作不能回退！').then(action => {
                 deleteProduct(productCode, response => {
                     if(response.status == 200) {
                         MessageBox('删除成功', '删除成功');

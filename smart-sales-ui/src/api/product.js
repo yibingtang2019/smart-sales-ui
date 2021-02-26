@@ -27,6 +27,10 @@ export const editProduct = (productCode, data, resolve) => {
     return request(`${process.env.VUE_APP_API_URL}/product/${productCode}`, "put", data, resolve);
 }
 
+export const updateProduct = (productCode, data, resolve) => {
+    return request(`${process.env.VUE_APP_API_URL}/product/${productCode}/update`, "put", data, resolve);
+}
+
 export const deleteProduct = (productCode, resolve) => {
     return request(`${process.env.VUE_APP_API_URL}/product/${productCode}`, "delete", {}, resolve);
 }

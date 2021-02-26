@@ -28,14 +28,17 @@
                 class="products">
                 <div v-for="product in products" :key="product.id"
                     style="cursor:pointer;margin:5px;">
-                    <b-img :src="product.picture_url" thumbnail style="width:200px;height:auto;"/>
-                    <div border style="width:200px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
+                    <b-img :src="product.picture_url" thumbnail style="width:155px;height:auto;"/>
+                    <div border style="width:155px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
                         {{ product.product_code }}
                     </div>
                 </div>
             </div>
             <div v-else>
                 <h5>没有产品</h5>
+            </div>
+            <div style="margin-top:10px;margin-left:5px;">
+                <span>总数: {{total}} 个</span>
             </div>
         </div>
     </b-container>
