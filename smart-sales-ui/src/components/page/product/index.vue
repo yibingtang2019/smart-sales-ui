@@ -726,7 +726,7 @@ export default {
             this.showUploador = false;
         },
         deleteProduct(productCode) {
-            MessageBox.confirm('确定删除此产品? 请注意此项操作不能回退！').then(action => {
+            MessageBox.confirm(`确定删除此产品 ${productCode} ? 请注意此项操作不能回退！`).then(action => {
                 deleteProduct(productCode, response => {
                     if(response.status == 200) {
                         MessageBox('删除成功', '删除成功');
