@@ -7,16 +7,16 @@ export const getByID = (id, resolve) => {
     return request(`${process.env.VUE_APP_API_URL}/product/${id}`, "get", {}, resolve);
 }
 
-export const getProductList = (params, resolve, reject) => {
-    return request(`${process.env.VUE_APP_API_URL}/products/search`, "get", params, resolve, reject);
+export const getProductList = (params, resolve) => {
+    return request(`${process.env.VUE_APP_API_URL}/products/search`, "get", params, resolve);
 }
 
-export const getHomeProductList = (resolve, reject) => {
-    return request(`${process.env.VUE_APP_API_URL}/products`, "get", { 'is_home': true }, resolve, reject);
+export const getHomeProductList = (resolve) => {
+    return request(`${process.env.VUE_APP_API_URL}/products/search`, "get", { 'is_home': true }, resolve);
 }
 
-export const getRecommendProductList = (resolve, reject) => {
-    return request(`${process.env.VUE_APP_API_URL}/products`, "get", { 'is_recommend': true }, resolve, reject);
+export const getRecommendProductList = (resolve) => {
+    return request(`${process.env.VUE_APP_API_URL}/products/search`, "get", { 'is_recommend': true }, resolve);
 }
 
 export const saveProduct = (productCode, data, resolve) => {

@@ -110,14 +110,14 @@ export default {
                 }
                 Indicator.close();
             };
-            let errorCallback = error => {
-                MessageBox('查询失败', '查询失败，登录过期请重新登录');
-                setTimeout(() => { Indicator.close(); }, 1000);
-            };
+            // let errorCallback = error => {
+            //     MessageBox('查询失败', '查询失败，登录过期请重新登录');
+            //     setTimeout(() => { Indicator.close(); }, 1000);
+            // };
             if(this.selectedOption == 'home') {
-                getHomeProductList(successCallback, errorCallback);
+                getHomeProductList(successCallback);
             } else if (this.selectedOption == 'recommend') {
-                getRecommendProductList(successCallback, errorCallback);
+                getRecommendProductList(successCallback);
             }
         },
         save() {

@@ -56,6 +56,7 @@ const handleError = (res) => {
     }
     if(res.response.status == 401) {
         MintUI.MessageBox({message: '登录过期，请重新登录'});
+        setTimeout(() => { MintUI.Indicator.close(); }, 1000);
     }
     if(res.response.status != 404) {
         console.log(res);

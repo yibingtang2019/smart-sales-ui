@@ -537,9 +537,6 @@ export default {
                     this.total = response.data.total;
                 }
                 Indicator.close();
-            }, error => {
-                MessageBox('查询失败', '查询失败，登录过期请重新登录');
-                setTimeout(() => { Indicator.close(); }, 1000);
             });
         },
         getFilter() {
