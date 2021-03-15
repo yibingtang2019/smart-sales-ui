@@ -181,9 +181,9 @@
                             placeholder="请输入产品名称"
                             required>
                         </b-form-input>
-                        <b-form-invalid-feedback :state="checkLength(this.editForm.productName)">
+                        <!-- <b-form-invalid-feedback :state="checkLength(this.editForm.productName)">
                             最多只能输入六个字符
-                        </b-form-invalid-feedback>
+                        </b-form-invalid-feedback> -->
                     </b-form-group>
                     <b-form-group id="groupCategory" label="分类:" label-for="category">
                         <b-form-select id="category"
@@ -466,13 +466,13 @@ export default {
             let reg = /^[_ 0-9a-zA-Z]*$/;
             return reg.test(value);
         },
-        checkLength(value) {
-            if(value == "") {
-                return false;
-            } else {
-                return value.length <= 5;
-            }
-        },
+        // checkLength(value) {
+        //     if(value == "") {
+        //         return false;
+        //     } else {
+        //         return value.length <= 5;
+        //     }
+        // },
         checkNumber(value) {
             let reg = /^(\d+|\d+\.\d{1,2})$/;
             return reg.test(value);
