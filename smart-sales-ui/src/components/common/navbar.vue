@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-navbar toggleable="lg" type="dark" variant="success">
-            <b-container>
+            <b-container style="width:90%">
                 <b-navbar-brand href="#">韵晴皮具销售管理系统</b-navbar-brand>
                 <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
                 <b-collapse id="nav-collapse" is-nav>

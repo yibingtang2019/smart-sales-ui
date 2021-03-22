@@ -158,7 +158,7 @@
             :title="editForm.id > 0 ? '编辑产品' : '新建产品'" 
             right shadow
             v-model="showEditor"
-            width="85%">
+            width="80%">
             <div class="px-3 py-2"
                 style="margin:5px">
                 <b-form @reset="onResetForm" ref="editorForm">
@@ -181,9 +181,6 @@
                             placeholder="请输入产品名称"
                             required>
                         </b-form-input>
-                        <!-- <b-form-invalid-feedback :state="checkLength(this.editForm.productName)">
-                            最多只能输入六个字符
-                        </b-form-invalid-feedback> -->
                     </b-form-group>
                     <b-form-group id="groupCategory" label="分类:" label-for="category">
                         <b-form-select id="category"
@@ -284,14 +281,14 @@
                             max-rows="12">
                         </b-form-textarea>
                     </b-form-group>
-                    <b-form-group id="groupCreatedTime" label="创建时间:" label-for="createdTime">
+                    <b-form-group id="groupCreatedTime" label="创建时间:" label-for="createdTime" v-if="editForm.id > 0">
                         <b-form-input
                             id="createdTime"
                             v-model.number="editForm.createdTime"
                             :disabled="disabled">
                         </b-form-input>
                     </b-form-group>
-                    <b-form-group id="groupUpdatedTime" label="修改时间:" label-for="updatedTime">
+                    <b-form-group id="groupUpdatedTime" label="修改时间:" label-for="updatedTime" v-if="editForm.id > 0">
                         <b-form-input
                             id="updatedTime"
                             v-model.number="editForm.updatedTime"
@@ -466,13 +463,6 @@ export default {
             let reg = /^[_ 0-9a-zA-Z]*$/;
             return reg.test(value);
         },
-        // checkLength(value) {
-        //     if(value == "") {
-        //         return false;
-        //     } else {
-        //         return value.length <= 5;
-        //     }
-        // },
         checkNumber(value) {
             let reg = /^(\d+|\d+\.\d{1,2})$/;
             return reg.test(value);
