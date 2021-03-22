@@ -5,25 +5,25 @@
                 <div class="card" style="margin:5px 20px;width:100%">
                     <div class="card-body">
                         <b-form @submit="onSubmit">
-                            <b-form-group id="groupSearch" label="产品名称:" label-for="search">
+                            <b-form-group id="groupSearch" label="" label-for="search">
                                 <b-form-input id="search"
                                     v-model="form.search"
                                     placeholder="请输入产品名称">
                                 </b-form-input>
                             </b-form-group>
-                            <b-form-group id="groupOnSale" label="是否在售:" label-for="onsale">
+                            <b-form-group id="groupOnSale" label="" label-for="onsale">
                                 <b-form-select id="onsale"
                                     v-model="form.sort_sale" 
                                     :options="optionsOnSale">
                                 </b-form-select>
                             </b-form-group>
-                            <b-form-group id="groupCategory" label="分类:" label-for="category">
+                            <b-form-group id="groupCategory" label="" label-for="category">
                                 <b-form-select id="category"
                                     v-model="form.category" 
                                     :options="optionsCategory">
                                 </b-form-select>
                             </b-form-group>
-                            <b-form-group id="groupSize" label="大小:" label-for="size">
+                            <b-form-group id="groupSize" label="" label-for="size">
                                 <b-form-select id="size"
                                     v-model="form.size" 
                                     :options="optionsSize">
