@@ -28,6 +28,7 @@ axiosRequest.interceptors.response.use((response) => {
             MintUI.MessageBox({message: '用户无访问权限'});
         } else if(response.status == 401) {
             MintUI.MessageBox({message: '登录过期，请重新登录'});
+            setTimeout(() => { MintUI.Indicator.close(); }, 1000);
         }
         return Promise.reject(res);
     }
@@ -67,6 +68,7 @@ const get = async(url, params, resolve, reject) => {
     try {
         if(checkIsExpired()) {
             MintUI.MessageBox({message: '登录过期，请重新登录'});
+            setTimeout(() => { MintUI.Indicator.close(); }, 1000);
             if(reject) {
                 return reject('err');
             } else {
@@ -100,6 +102,7 @@ const post = async(url, params, resolve, reject) => {
         } else {
             if(checkIsExpired()) {
                 MintUI.MessageBox({message: '登录过期，请重新登录'});
+                setTimeout(() => { MintUI.Indicator.close(); }, 1000);
                 if(reject) {
                     return reject('err');
                 } else {
@@ -131,6 +134,7 @@ const put = async(url, params, resolve, reject) => {
     try {
         if(checkIsExpired()) {
             MintUI.MessageBox({message: '登录过期，请重新登录'});
+            setTimeout(() => { MintUI.Indicator.close(); }, 1000);
             if(reject) {
                 return reject('err');
             } else {
@@ -161,6 +165,7 @@ const remove = async(url, params, resolve, reject) => {
     try {
         if(checkIsExpired()) {
             MintUI.MessageBox({message: '登录过期，请重新登录'});
+            setTimeout(() => { MintUI.Indicator.close(); }, 1000);
             if(reject) {
                 return reject('err');
             } else {
