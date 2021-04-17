@@ -14,7 +14,7 @@ const axiosRequest = axios.create({
 axiosRequest.interceptors.request.use(config => {
     const token = getLocalItem('token');
     if (token) {
-        config.headers['Authorization'] = `FLASK ${token}`;
+        config.headers['Authorization'] = `i_zhu_hai ${token}`;
     }
     return config;
 }, err);
