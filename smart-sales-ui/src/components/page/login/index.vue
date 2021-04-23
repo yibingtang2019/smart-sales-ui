@@ -1,6 +1,6 @@
 <template>
-    <div class="card" style="margin:20px;width:90%">
-        <div class="card-header" style="text-align:center">
+    <div class="card" style="margin:20px auto;width:90%">
+        <div class="card-header" style="text-align:center;background-color:#28a745;color:#fff">
             登录
         </div>
         <div class="card-body">

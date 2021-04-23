@@ -64,7 +64,9 @@
                             style="max-width: 20rem;"
                             class="mb-2">
                             <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:5px;">
-                                <div style="margin-right:5px;width:150px;">名称:&nbsp;{{ product.product_name }}</div>
+                                <div style="margin-right:5px;width:150px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
+                                    名称:&nbsp;{{ product.product_name }}
+                                </div>
                                 <div style="margin-right:5px;width:150px;">分类:&nbsp;
                                     {{ getCategoryName(product.category_id) }}
                                     {{ getSizeName(product.size) }}
