@@ -52,10 +52,10 @@
 
         <div v-if="products.length" 
             style="margin:5px;">
-            <b-row style="justify-content:space-around;">
+            <b-row style="justify-content:flex-start;">
                 <div v-for="product in products" 
                     v-bind:key="product.product_code" 
-                    style="margin:5px;">
+                    style="margin:13px;">
                     <b-col l="4">
                         <b-card v-bind:title="product.product_code"
                             v-bind:img-src="product.picture_url"
@@ -80,6 +80,9 @@
                             <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:5px;">
                                 <div style="margin-right:5px;width:150px;">库存数量:&nbsp;{{ product.count_store }}</div>
                                 <div style="width:150px;">销售数量:&nbsp;{{ product.count_sale }}</div>
+                            </div>
+                            <div style="display:flex;align-items:center;justify-content:flex-start;margin-bottom:5px;">
+                                <div style="margin-right:5px;width:150px;">点击量:&nbsp;{{ product.click_count == null ? '0' : product.click_count }}</div>
                             </div>
                             <div style="margin-bottom:10px;">
                                 <div style="margin-right:5px;width:300px;">尺寸:&nbsp;{{ product.dimension }}</div>
