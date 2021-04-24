@@ -24,12 +24,11 @@
                 </div>
             </b-row>
             <div v-if="products.length" 
-                style="display: flex;flex-wrap:wrap;justify-content:space-between;"
-                class="products">
+                style="display: flex;flex-wrap:wrap;justify-content:flex-start;">
                 <div v-for="product in products" :key="product.id"
-                    style="cursor:pointer;margin:5px;">
-                    <b-img :src="product.picture_url" thumbnail style="width:155px;height:auto;"/>
-                    <div border style="width:155px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
+                    style="cursor:pointer;margin:12px;">
+                    <b-img :src="product.picture_url" thumbnail style="width:156px;height:auto;"/>
+                    <div border style="width:156px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
                         {{ product.product_code }}
                     </div>
                 </div>

@@ -19,6 +19,10 @@ export const getRecommendProductList = (resolve) => {
     return request(`${process.env.VUE_APP_API_URL}/products/search`, "get", { 'is_recommend': true }, resolve);
 }
 
+export const getProductListByProductCodes = (params, resolve) => {
+    return request(`${process.env.VUE_APP_API_URL}/products`, "get", params, resolve);
+}
+
 export const saveProduct = (productCode, data, resolve) => {
     return request(`${process.env.VUE_APP_API_URL}/product/${productCode}`, "post", data, resolve);
 }

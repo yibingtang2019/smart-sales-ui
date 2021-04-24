@@ -10,7 +10,7 @@
                             <template slot="button-content"><em style="font-style:normal">{{menuItem}}</em></template>
                             <b-dropdown-item href="#" @click="product">产品信息管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="homeSort">产品排序管理</b-dropdown-item>
-                            <b-dropdown-item href="#" @click="sales">销售信息管理</b-dropdown-item>
+                            <b-dropdown-item href="#" @click="customers">客户信息管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="profile">登录用户</b-dropdown-item>
                             <b-dropdown-item href="#" @click="quit">退出</b-dropdown-item>
                         </b-nav-item-dropdown>
@@ -46,8 +46,8 @@ export default {
             this.$router.push("/home-sort");
             this.setMenuItem();
         },
-        sales() {
-            this.$router.push("/sale");
+        customers() {
+            this.$router.push("/customer");
             this.setMenuItem();
         },
         profile() {

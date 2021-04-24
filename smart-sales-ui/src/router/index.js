@@ -30,9 +30,9 @@ export default new Router({
                     meta: { title: '产品排序管理', auth: true }
                 },
                 {
-                    path: '/sale',
-                    component: resolve => require(['components/page/sale/index.vue'], resolve),
-                    meta: { title: '销售信息管理', auth: true }
+                    path: '/customer',
+                    component: resolve => require(['components/page/customer/index.vue'], resolve),
+                    meta: { title: '客户信息管理', auth: true }
                 }
             ]
         },

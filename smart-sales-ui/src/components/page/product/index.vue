@@ -49,6 +49,7 @@
                 </div>
             </b-row>    
         </div>
+
         <div v-if="products.length" 
             style="margin:5px;">
             <b-row style="justify-content:space-around;">
@@ -156,6 +157,7 @@
         <div v-else>
             <h5>没有产品</h5>
         </div>
+
         <b-sidebar id="editor" 
             :title="editForm.id > 0 ? '编辑产品' : '新建产品'" 
             right shadow
@@ -370,8 +372,7 @@
 <script>
 import { 
     Indicator, 
-    MessageBox,
-    Switch
+    MessageBox
 } from 'mint-ui';
 
 import Sortable from 'sortablejs';
