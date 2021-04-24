@@ -18,6 +18,11 @@
                                 <b-button type="button" @click="onReset" variant="secondary" style="margin:0px 5px;">
                                     重置
                                 </b-button>
+                                 <b-button type="button"
+                                    @click="toggleShow"
+                                    variant="secondary" style="margin:0px 5px;">
+                                    {{showAll == true ? "隐藏列" : "显示列" }}
+                                </b-button>
                             </div>
                         </b-form>
                     </div>
@@ -25,14 +30,15 @@
             </b-row>
         </div>
         <div v-if="customers.length" 
-            style="margin:5px;">
+            style="margin:5px auto;width:90%;">
             <b-row style="justify-content:space-around;">
                 <b-table :items="customers" :fields="fields" 
-                    responsive hover selectable select-mode="single"
-                    @row-selected="onRowSelected">
+                    responsive hover selectable select-mode="single" 
+                    @row-selected="onRowSelected"
+                    ref="customerTable">
                     <template #cell(avatar_url)="data">
                         <b-img thumbnail fluid :src="data.item.avatar_url" 
-                            center lazy width="50" height="50"
+                            center lazy width="30" height="30"
                             v-if="data.item.avatar_url!=''">
                         </b-img>
                     </template>
@@ -69,13 +75,20 @@
                 <div v-for="like in likes" 
                     v-bind:key="like.product_code" 
                     style="cursor:pointer;margin:5px;">
-                    <b-img :src="like.picture_url" thumbnail style="width:100px;height:auto;"/>
-                    <div border style="width:100px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
+                    <b-img :src="like.picture_url" thumbnail style="width:90px;height:auto;"/>
+                    <div border style="width:90px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
                         {{ like.product_code }}
                     </div>
                 </div>
             </div>
-            <div style="height:30px;line-height:30px">客户反馈</div>
+            <div style="height:30px;line-height:30px;width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;">
+                <div style="width:20%">客户反馈</div>
+                <b-link href="#"
+                    @click="toggleShowFeedback"
+                    style="font-size:13px;margin-right:10px;width:20%;text-align:right;font-size:16px;">
+                    {{showAllFeedback == true ? "隐藏列" : "显示列" }}
+                </b-link>
+            </div>
             <div v-if="feedbacks != null && feedbacks.length > 0" style="margin-top:10px;">
                 <b-table :items="feedbacks" :fields="feedbackFields" 
                     responsive hover selectable select-mode="single"
@@ -83,12 +96,18 @@
                     <template #cell(category)="data">
                         {{getCategory(data.item.category)}}
                     </template>
+                    <template #cell(is_replied)="data">
+                        {{data.item.is_replied == true ? "已回复" : "未回复"}}
+                    </template>
                     <template #cell(create_time)="data">
                         {{dateFormat(data.item.create_time)}}
                     </template>
+                    <template #cell(reply_time)="data">
+                        {{data.item.is_replied == true ? dateFormat(data.item.reply_time) : ''}}
+                    </template>
                 </b-table>
             </div>
-            <div v-if="selectedFeedback != null" style="margin-top:10px;">
+            <div v-if="selectedFeedback != null" style="margin-top:10px;margin-bottom:10px;">
                 <b-form-textarea
                     id="feedback-content"
                     v-model="selectedFeedback.content"
@@ -125,13 +144,34 @@ import {
 export default {
     data() {
         return {
+            isMobile: false,
             loading: true,
             disabled: true,
             customers: [],
             form: {
                 search: null
             },
-            fields: [
+            fields: [],
+            fieldsSimple: [
+                {
+                    key: 'avatar_url',
+                    label: '头像',
+                    align: "left"
+                },
+                {
+                    key: 'name',
+                    label: '姓名'
+                },
+                {
+                    key: 'nick_name',
+                    label: '昵称'
+                },
+                {
+                    key: 'tel',
+                    label: '手机'
+                }
+            ],
+            fieldsAll: [
                 {
                     key: 'avatar_url',
                     label: '头像'
@@ -173,7 +213,9 @@ export default {
                     label: '最后登录时间'
                 }
             ],
-            feedbackFields: [
+            showAll: false,
+            feedbackFields: [],
+            feedbackFieldsSimple: [
                 {
                     key: 'category',
                     label: '类别'
@@ -183,10 +225,33 @@ export default {
                     label: '手机号码'
                 },
                 {
-                    key: 'create_time',
-                    label: '反馈时间'
+                    key: 'is_replied',
+                    label: '是否已回复'
                 }
             ],
+            feedbackFieldsAll: [
+                {
+                    key: 'category',
+                    label: '类别'
+                },
+                {
+                    key: 'tel',
+                    label: '手机号码'
+                },
+                {
+                    key: 'is_replied',
+                    label: '是否已回复'
+                },
+                {
+                    key: 'create_time',
+                    label: '反馈时间'
+                },
+                {
+                    key: 'reply_time',
+                    label: '回复时间'
+                }
+            ],
+            showAllFeedback: false,
             selected: [],
             selectedCustomer: null,
             likes: [],
@@ -199,7 +264,19 @@ export default {
         }
     },
     mounted() {
+        this.getIsMobile();
         this.search();
+        if(this.isMobile) {
+            this.showAll = false;
+            this.fields = this.fieldsSimple;
+            this.showAllFeedback = false;
+            this.feedbackFields = this.feedbackFieldsSimple;
+        } else {
+            this.showAll = true;
+            this.fields = this.fieldsAll;
+            this.showAllFeedback = true;
+            this.feedbackFields = this.feedbackFieldsAll;
+        }
     },
     watch: {
         currentPage: function(newValue, oldValue) {
@@ -207,6 +284,16 @@ export default {
         }
     },
     methods: {
+        getIsMobile() {
+            this.flag = navigator.userAgent.match(
+                /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
+            );
+            if(this.flag === null) {
+                this.isMobile = false;
+            } else {
+                this.isMobile = true;
+            }
+        },
         getGender: function(value) {
             if(value == 0) {
                 return '未知';
@@ -253,6 +340,22 @@ export default {
                 (min < 10 ? '0' + min : min) + ':' +
                 (sec < 10 ? '0' + sec : sec);
             return newTime;
+        },
+        toggleShow() {
+            this.showAll = !this.showAll;
+            if(this.showAll == true) {
+                this.fields = this.fieldsAll;
+            } else {
+                this.fields = this.fieldsSimple;
+            }
+        },
+        toggleShowFeedback() {
+            this.showAllFeedback = !this.showAllFeedback;
+            if(this.showAllFeedback == true) {
+                this.feedbackFields = this.feedbackFieldsAll;
+            } else {
+                this.feedbackFields = this.feedbackFieldsSimple;
+            }
         },
         onSubmit() {
             this.search();
