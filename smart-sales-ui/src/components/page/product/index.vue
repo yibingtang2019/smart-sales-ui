@@ -360,7 +360,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <h5>没有图片</h5>
+                    <div style="width:100%;text-align:center;margin-top:20px;margin-bottom:20px;">没有图片</div>
                 </div>
                 <div style="text-align:right;margin-right:20px;">
                     <b-button type="button" @click="saveSort" variant="primary">
@@ -721,6 +721,7 @@ export default {
         resetUpload() {
             this.$refs['file-input'].reset();
             this.fileUpload = null;
+            this.search();
         },
         cancelUpload() {
             this.productCodeUploader = '';
