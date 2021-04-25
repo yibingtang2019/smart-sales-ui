@@ -33,6 +33,11 @@ export default new Router({
                     path: '/customer',
                     component: resolve => require(['components/page/customer/index.vue'], resolve),
                     meta: { title: '客户信息管理', auth: true }
+                },
+                {
+                    path: '/order',
+                    component: resolve => require(['components/page/order/index.vue'], resolve),
+                    meta: { title: '订单信息管理', auth: true }
                 }
             ]
         },
