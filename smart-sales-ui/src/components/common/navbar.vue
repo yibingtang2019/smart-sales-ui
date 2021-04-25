@@ -35,7 +35,10 @@ export default {
     methods: {
         setMenuItem() {
             if(this.$router.currentRoute.meta && this.$router.currentRoute.meta.title) {
-                this.menuItem = this.$router.currentRoute.meta.title;
+                let _this = this;
+                setTimeout(() => {
+                    _this.menuItem = _this.$router.currentRoute.meta.title;
+                }, 1000);
             }
         },
         product() {

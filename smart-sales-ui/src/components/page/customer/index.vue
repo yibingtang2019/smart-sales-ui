@@ -226,7 +226,7 @@ export default {
                 },
                 {
                     key: 'is_replied',
-                    label: '是否已回复'
+                    label: '状态'
                 }
             ],
             feedbackFieldsAll: [
@@ -240,7 +240,7 @@ export default {
                 },
                 {
                     key: 'is_replied',
-                    label: '是否已回复'
+                    label: '状态'
                 },
                 {
                     key: 'create_time',

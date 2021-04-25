@@ -24,11 +24,12 @@
                 </div>
             </b-row>
             <div v-if="products.length" 
-                style="display: flex;flex-wrap:wrap;justify-content:flex-start;">
+                class="products"
+                style="display: flex;flex-wrap:wrap;justify-content:center;width:100%;padding:10px;">
                 <div v-for="product in products" :key="product.id"
-                    style="cursor:pointer;margin:12px;">
-                    <b-img :src="product.picture_url" thumbnail style="width:156px;height:auto;"/>
-                    <div border style="width:156px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
+                    style="cursor:pointer;margin:10px 5px;width:20%">
+                    <b-img :src="product.picture_url" thumbnail style="width:98%;height:auto;"/>
+                    <div border style="width:100%;display:block;overflow:hidden;margin-top:5px;text-align:center;">
                         {{ product.product_code }}
                     </div>
                 </div>
@@ -36,7 +37,7 @@
             <div v-else>
                 <h5>没有产品</h5>
             </div>
-            <div style="margin-top:10px;margin-left:5px;">
+            <div style="margin-top:10px;margin-bottom:10px;width:100%;text-align:center;">
                 <span>总数: {{total}} 个</span>
             </div>
         </div>
