@@ -384,7 +384,7 @@ import {
     getOptionsOnSale,
     getOptionsCategory,
     getOptionsSize
-} from 'api/config'
+} from 'api/config';
 
 import { 
     getProductList,
@@ -484,25 +484,6 @@ export default {
                 e.target.value = '';
             }
         },
-        dateFormat: function(time) {
-            if (time === null || time.length === 0) {
-                return '-';
-            }
-            var t = new Date(time);
-            var year = t.getFullYear();
-            var month = t.getMonth() + 1;
-            var day = t.getDate();
-            var hour = t.getHours();
-            var min = t.getMinutes();
-            var sec = t.getSeconds();
-            var newTime = year + '-' +
-                (month < 10 ? '0' + month : month) + '-' +
-                (day < 10 ? '0' + day : day) + ' ' +
-                (hour < 10 ? '0' + hour : hour) + ':' +
-                (min < 10 ? '0' + min : min) + ':' +
-                (sec < 10 ? '0' + sec : sec);
-            return newTime;
-        },
         getCategoryName(category_id) {
             let categories = this.optionsCategory.filter(item => item.value == category_id);
             return categories.length > 0 ? categories[0].text : '';
@@ -573,8 +554,8 @@ export default {
             this.editForm.isNew = product.is_new;
             this.editForm.isRecommend = product.is_recommend;
             this.editForm.description = product.description;
-            this.editForm.createdTime = this.dateFormat(product.create_time);
-            this.editForm.updatedTime = this.dateFormat(product.update_time);
+            this.editForm.createdTime = this.dateFormatString(product.create_time);
+            this.editForm.updatedTime = this.dateFormatString(product.update_time);
         },
         saveProduct() {
             let form = this.$refs['editorForm'];

@@ -29,11 +29,11 @@
                 </div>
             </b-row>
         </div>
-        <div v-if="customers.length" 
+        <div v-if="customers.length > 0" 
             style="margin:5px auto;width:90%;">
             <b-row style="justify-content:space-around;">
                 <b-table :items="customers" :fields="fields" 
-                    responsive hover selectable select-mode="single" 
+                    small responsive hover selectable select-mode="single" 
                     @row-selected="onRowSelected"
                     ref="customerTable">
                     <template #cell(avatar_url)="data">
@@ -91,7 +91,7 @@
             </div>
             <div v-if="feedbacks != null && feedbacks.length > 0" style="margin-top:10px;">
                 <b-table :items="feedbacks" :fields="feedbackFields" 
-                    responsive hover selectable select-mode="single"
+                    small responsive hover selectable select-mode="single"
                     @row-selected="onFeedbackRowSelected">
                     <template #cell(category)="data">
                         {{getCategory(data.item.category)}}
@@ -155,8 +155,7 @@ export default {
             fieldsSimple: [
                 {
                     key: 'avatar_url',
-                    label: '头像',
-                    align: "left"
+                    label: '头像'
                 },
                 {
                     key: 'name',
@@ -264,8 +263,8 @@ export default {
         }
     },
     mounted() {
-        this.getIsMobile();
         this.search();
+        this.isMobile = this.getIsMobile();
         if(this.isMobile) {
             this.showAll = false;
             this.fields = this.fieldsSimple;
@@ -284,26 +283,8 @@ export default {
         }
     },
     methods: {
-        getIsMobile() {
-            this.flag = navigator.userAgent.match(
-                /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
-            );
-            if(this.flag === null) {
-                this.isMobile = false;
-            } else {
-                this.isMobile = true;
-            }
-        },
         getGender: function(value) {
-            if(value == 0) {
-                return '未知';
-            }
-            if(value == 1) {
-                return '男';
-            }
-            if(value == 2) {
-                return '女';
-            }
+            return this.getGenderString(value);
         },
         getCategory(value) {
             if(value == 0) {
@@ -323,23 +304,7 @@ export default {
             }
         },
         dateFormat: function(time) {
-            if (time === null || time.length === 0) {
-                return '-';
-            }
-            var t = new Date(time);
-            var year = t.getFullYear();
-            var month = t.getMonth() + 1;
-            var day = t.getDate();
-            var hour = t.getHours();
-            var min = t.getMinutes();
-            var sec = t.getSeconds();
-            var newTime = year + '-' +
-                (month < 10 ? '0' + month : month) + '-' +
-                (day < 10 ? '0' + day : day) + ' ' +
-                (hour < 10 ? '0' + hour : hour) + ':' +
-                (min < 10 ? '0' + min : min) + ':' +
-                (sec < 10 ? '0' + sec : sec);
-            return newTime;
+            return this.dateFormatString(time);
         },
         toggleShow() {
             this.showAll = !this.showAll;
