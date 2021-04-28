@@ -34,7 +34,7 @@
             style="margin:5px auto;width:90%;">
             <b-row style="justify-content:space-around;">
                 <b-table :items="orders" :fields="fields" 
-                    small responsive hover selectable select-mode="single" 
+                    small fixed hover selectable select-mode="single" 
                     @row-selected="onRowSelected"
                     ref="orderTable">
                     <template #cell(status)="data">
@@ -73,54 +73,70 @@
             hide-footer
             v-model="modalShow"
             v-if="selectedOrder != null">
-            <div class="card" style="margin:5px 10px;width:95%;">
-                <div class="card-header" style="display:flex;flex-direction:row;justify-content:space-between;align-items:center;">
+            <div class="card customer-info">
+                <div class="card-header header">
                     <div style="width:80%">订单编号: {{selectedOrder.order_number}}</div> 
                     <div :style="{color: getStatusColor(selectedOrder.status)}">
                         {{getStatus(selectedOrder.status)}}
                     </div> 
                 </div>
-                <div class="card-body" style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center;">
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <div class="card-body body" style="">
+                    <div class="item">
                         <div style="width:30%;">收货人:</div>
                         <div style="width:70%">{{selectedOrder.address_user_name}}</div>
                     </div>
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="item">
                         <div style="width:30%;">收货手机:</div>
                         <div style="width:70%">{{selectedOrder.address_tel_number}}</div>
                     </div>
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="item">
                         <div style="width:30%;">详细地址:</div>
                         <div style="width:70%">{{selectedOrder.address_detail_info}}</div>
                     </div>
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="item">
                         <div style="width:30%;">下单时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.create_time)}}</div>
                     </div>
                     <div v-if="selectedOrder.status == 1 || selectedOrder.status == 2 || selectedOrder.status == 3" 
-                        style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        class="item">
                         <div style="width:30%;">付款时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.payment_time)}}</div>
                     </div>
                     <div v-if="selectedOrder.status == 2"
-                        style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        class="item">
                         <div style="width:30%;">发货时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.shipped_time)}}</div>
                     </div>
                     <div v-if="selectedOrder.status == 3"
-                        style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        class="item">
                         <div style="width:30%;">收货时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.received_time)}}</div>
                     </div>
                     <div v-if="selectedOrder.status == 4"
-                        style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        class="item">
                         <div style="width:30%;">取消时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.canceled_time)}}</div>
                     </div>
                     <div v-if="selectedOrder.status == 5"
-                        style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        class="item">
                         <div style="width:30%;">删除时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.deleted_time)}}</div>
+                    </div>
+                    <div class="detail" v-if="order_items.length > 0">
+                        <div v-for="order_item in order_items" :key="order_item.id" class="detail-item">
+                            <b-img :src="order_item.picture_url" thumbnail class="detail-item-image"/>
+                            <div class="detail-item-info">
+                                <div class="detail-item-value detail-item-name">
+                                    {{ order_item.product_code }} {{order_item.product_name}}
+                                </div>
+                                <div class="detail-item-value">
+                                    数量: {{ order_item.count }} 个
+                                </div>
+                                <div class="detail-item-value">
+                                    价格: {{order_item.price}} 元
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -133,37 +149,37 @@
                         </b-img>
                     </div>
                 </div>
-                <div class="card-body" style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:center;">
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <div class="card-body body">
+                    <div class="item">
                         <div style="width:30%;">姓名:</div>
                         <div style="width:70%">{{selectedOrder.name}}</div>
                     </div>
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="item">
                         <div style="width:30%;">昵称:</div>
                         <div style="width:70%">{{selectedOrder.nick_name}}</div>
                     </div>
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="item">
                         <div style="width:30%;">手机号码:</div>
                         <div style="width:70%">{{selectedOrder.tel}}</div>
                     </div>
                     <div v-if="selectedOrder.weixin != ''" 
-                        style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        class="item">
                         <div style="width:30%;">微信:</div>
                         <div style="width:70%">{{selectedOrder.weixin}}</div>
                     </div>
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="item">
                         <div style="width:30%;">性别:</div>
                         <div style="width:70%">{{getGender(selectedOrder.gender)}}</div>
                     </div>
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="item">
                         <div style="width:30%;">所在地:</div>
                         <div style="width:70%">{{selectedOrder.province}} {{selectedOrder.city}}</div>
                     </div>
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="item">
                         <div style="width:30%;">加入时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.create_time)}}</div>
                     </div>
-                    <div style="width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="item">
                         <div style="width:30%;">登录时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.last_login_time)}}</div>
                     </div>
@@ -184,7 +200,11 @@ import {
 } from 'api/config';
 
 import { 
-    getOrderList
+    getPicturePath 
+} from "api/picture";
+
+import { 
+    getOrderList, getOrder
 } from "api/order";
 
 export default {
@@ -204,11 +224,12 @@ export default {
                 {
                     key: 'order_number',
                     label: '订单编号',
-                    class: 'W140'
+                    class: 'W120'
                 },
                 {
                     key: 'status',
-                    label: '状态'
+                    label: '状态',
+                    class: 'W60'
                 },
                 {
                     key: 'create_time',
@@ -232,7 +253,8 @@ export default {
                 },
                 {
                     key: 'tel',
-                    label: '手机号码'
+                    label: '手机号码',
+                    class: 'W120'
                 },
                 {
                     key: 'create_time',
@@ -258,6 +280,7 @@ export default {
             showAll: false,
             selected: [],
             selectedOrder: null,
+            order_items: [],
             modalShow: false,
             total: 0,
             currentPage: 1,
@@ -371,7 +394,18 @@ export default {
             this.selected = items;
             if(this.selected.length > 0) {
                 this.selectedOrder = this.selected[0];
-                
+                getOrder(this.selectedOrder.order_number, res => {
+                    if(res.status == 200) {
+                        let { data } = res.data;
+                        this.order_items = data.order_items;
+                        // console.log(this.order_items);
+                        this.order_items.forEach(orderItem => {
+                            if(orderItem.picture_url) {
+                                orderItem.picture_url = getPicturePath(orderItem.picture_url);
+                            }
+                        });
+                    }
+                });
             } else {
                 this.selectedOrder = null;
             }
@@ -381,6 +415,76 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.customer-info {
+    margin:5px 10px;
+    width:95%;
+}
+.header {
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+}
 
+.body {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:center;
+}
+
+ .item {
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.detail {
+    width: 100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.detail-item {
+    width: 100%;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom: 10px;
+}
+
+.detail-item-image {
+    width:30%;
+    height:auto;
+}
+
+.detail-item-info {
+    width: 70%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+    margin-left: 10px;
+}
+
+.detail-item-value {
+    width: 100%;
+    text-align: left;
+    line-height: 140%;
+    height: 28px;
+}
+
+.detail-item-name {
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+}
 </style>

@@ -21,6 +21,10 @@ export default {
 } 
 .W100 {
     width:100px !important;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    word-break:keep-all;
 } 
 .W120 {
     width:120px !important;

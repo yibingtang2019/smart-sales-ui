@@ -18,11 +18,6 @@
                                 <b-button type="button" @click="onReset" variant="secondary" style="margin:0px 5px;">
                                     重置
                                 </b-button>
-                                 <b-button type="button"
-                                    @click="toggleShow"
-                                    variant="secondary" style="margin:0px 5px;">
-                                    {{showAll == true ? "隐藏列" : "显示列" }}
-                                </b-button>
                             </div>
                         </b-form>
                     </div>
@@ -69,25 +64,8 @@
         <b-modal id="customer-info" title="客户信息" size="lg"
             hide-footer
             v-model="modalShow">
-            <div style="height:30px;line-height:30px">客户收藏</div>
-            <div v-if="likes != null && likes.length > 0" 
-                style="display: flex;flex-wrap:wrap;justify-content:flex-start;margin-bottom:10px;">
-                <div v-for="like in likes" 
-                    v-bind:key="like.product_code" 
-                    style="cursor:pointer;margin:5px;">
-                    <b-img :src="like.picture_url" thumbnail style="width:90px;height:auto;"/>
-                    <div border style="width:90px;display:block;overflow:hidden;margin-top:5px;text-align:center;">
-                        {{ like.product_code }}
-                    </div>
-                </div>
-            </div>
-            <div style="height:30px;line-height:30px;width:100%;display:flex;flex-direction:row;justify-content:space-between;align-items:center;">
+            <div class="feedback-header">
                 <div style="width:20%">客户反馈</div>
-                <b-link href="#"
-                    @click="toggleShowFeedback"
-                    style="font-size:13px;margin-right:10px;width:20%;text-align:right;font-size:16px;">
-                    {{showAllFeedback == true ? "隐藏列" : "显示列" }}
-                </b-link>
             </div>
             <div v-if="feedbacks != null && feedbacks.length > 0" style="margin-top:10px;">
                 <b-table :items="feedbacks" :fields="feedbackFields" 
@@ -97,7 +75,9 @@
                         {{getCategory(data.item.category)}}
                     </template>
                     <template #cell(is_replied)="data">
-                        {{data.item.is_replied == true ? "已回复" : "未回复"}}
+                        <span :style="{color: getStatusColor(data.item.is_replied)}">
+                            {{data.item.is_replied == true ? "已回复" : "未回复"}}
+                        </span>
                     </template>
                     <template #cell(create_time)="data">
                         {{dateFormat(data.item.create_time)}}
@@ -108,12 +88,40 @@
                 </b-table>
             </div>
             <div v-if="selectedFeedback != null" style="margin-top:10px;margin-bottom:10px;">
+                <div style="height:28px;line-height:28px;margin-bottom:10px;margin-left:10px;">
+                    反馈时间: {{dateFormat(selectedFeedback.create_time)}} 
+                    <img :src="`${publicPath}arrow-up.png`" alt="" style="height:28px;width:20px;cursor:pointer;margin-left:5px;"
+                        v-if="selectedFeedback != null" 
+                        @click="selectedFeedback = null">
+                </div>
+                <div style="height:28px;line-height:28px;margin-bottom:10px;margin-left:10px;"
+                    v-if="selectedFeedback.is_replied == true">
+                    回复时间: {{dateFormat(selectedFeedback.reply_time)}}
+                </div>
                 <b-form-textarea
                     id="feedback-content"
                     v-model="selectedFeedback.content"
                     rows="6"
-                    max-rows="12">
+                    max-rows="12"
+                    disabled>
                 </b-form-textarea>
+            </div>
+            <div style="height:30px;line-height:30px;margin-top:10px;margin-bottom:10px;">客户收藏</div>
+            <div v-if="likes != null && likes.length > 0" 
+                class="likes">
+                <div v-for="like in likes" 
+                    v-bind:key="like.product_code" 
+                    class="like-item">
+                    <b-img :src="like.picture_url" thumbnail class="like-item-image"/>
+                    <div border class="like-item-info">
+                        <div class="like-item-value">
+                            {{ like.product_code }} 
+                        </div>
+                        <div class="like-item-value like-item-name">
+                            {{ like.product_name }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </b-modal>
     </b-container>
@@ -144,6 +152,7 @@ import {
 export default {
     data() {
         return {
+            publicPath: process.env.BASE_URL,
             isMobile: false,
             loading: true,
             disabled: true,
@@ -188,12 +197,12 @@ export default {
                     label: '性别'
                 },
                 {
-                    key: 'city',
-                    label: '城市'
-                },
-                {
                     key: 'province',
                     label: '省份'
+                },
+                {
+                    key: 'city',
+                    label: '城市'
                 },
                 {
                     key: 'tel',
@@ -225,7 +234,8 @@ export default {
                 },
                 {
                     key: 'is_replied',
-                    label: '状态'
+                    label: '状态',
+                    sortable: true 
                 }
             ],
             feedbackFieldsAll: [
@@ -239,15 +249,18 @@ export default {
                 },
                 {
                     key: 'is_replied',
-                    label: '状态'
+                    label: '状态',
+                    sortable: true 
                 },
                 {
                     key: 'create_time',
-                    label: '反馈时间'
+                    label: '反馈时间',
+                    sortable: true 
                 },
                 {
                     key: 'reply_time',
-                    label: '回复时间'
+                    label: '回复时间',
+                    sortable: true 
                 }
             ],
             showAllFeedback: false,
@@ -303,24 +316,11 @@ export default {
                 return '其它';
             }
         },
+        getStatusColor(is_replied) {
+            return is_replied ? "#28a745" : "#007bff";
+        },
         dateFormat: function(time) {
             return this.dateFormatString(time);
-        },
-        toggleShow() {
-            this.showAll = !this.showAll;
-            if(this.showAll == true) {
-                this.fields = this.fieldsAll;
-            } else {
-                this.fields = this.fieldsSimple;
-            }
-        },
-        toggleShowFeedback() {
-            this.showAllFeedback = !this.showAllFeedback;
-            if(this.showAllFeedback == true) {
-                this.feedbackFields = this.feedbackFieldsAll;
-            } else {
-                this.feedbackFields = this.feedbackFieldsSimple;
-            }
         },
         onSubmit() {
             this.search();
@@ -389,8 +389,6 @@ export default {
         onFeedbackRowSelected(items) {
             if(items.length > 0) {
                 this.selectedFeedback = items[0];
-            } else {
-                this.selectedFeedback = null;
             }
         }
     }
@@ -398,5 +396,66 @@ export default {
 </script>
 
 <style scoped>
+.feedback-header {
+    height:30px;
+    line-height:30px;
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+}
 
+.likes {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.like-item {
+    cursor:pointer;
+    margin-bottom:5px;
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom: 10px;
+}
+
+.like-item-image {
+    width:30%;
+    height:auto;
+}
+
+.like-item-info {
+    width: 70%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+    margin-left: 10px;
+}
+
+.like-item-value {
+    width: 100%;
+    text-align: left;
+    line-height: 150%;
+    height: 28px;
+}
+
+.like-item-name {
+    height: 52px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+#feedback-content {
+    overflow-y: hidden !important;
+    background-color: #FFF;
+}
 </style>
