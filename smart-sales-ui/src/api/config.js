@@ -37,3 +37,11 @@ export const getOptionsStatus = () => {
         { value: 5, text: '已删除' }
     ];
 }
+
+export const getExpressCompany = () => {
+    return [
+        { value: null, text: '请选择快递公司' },
+        { value: 'sf', text: '顺风快递' },
+        { value: 'ems', text: '邮政快递' }
+    ];
+}

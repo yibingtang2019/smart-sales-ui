@@ -9,3 +9,7 @@ export const getOrderList = (params, resolve) => {
 export const getOrder = (order_number, resolve) => {
     return request(`${process.env.VUE_APP_API_URL}/order/search/${order_number}`, "get", {}, resolve);
 }
+
+export const saveExpress = (order_number, data, resolve) => {
+    return request(`${process.env.VUE_APP_API_URL}/order/${order_number}`, "put", data, resolve);
+}

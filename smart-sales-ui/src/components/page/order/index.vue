@@ -49,7 +49,7 @@
                         {{data.item.status == 1 || data.item.status == 2 || data.item.status == 3 ? dateFormat(data.item.payment_time) : ''}}
                     </template>
                     <template #cell(shipped_time)="data">
-                        {{data.item.status == 2 ? dateFormat(data.item.shipped_time) : ''}}
+                        {{data.item.status == 2 || data.item.status == 3 ? dateFormat(data.item.shipped_time) : ''}}
                     </template>
                     <template #cell(received_time)="data">
                         {{data.item.status == 3 ? dateFormat(data.item.received_time) : ''}}
@@ -80,7 +80,7 @@
                         {{getStatus(selectedOrder.status)}}
                     </div> 
                 </div>
-                <div class="card-body body" style="">
+                <div class="card-body body">
                     <div class="item">
                         <div style="width:30%;">收货人:</div>
                         <div style="width:70%">{{selectedOrder.address_user_name}}</div>
@@ -102,7 +102,7 @@
                         <div style="width:30%;">付款时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.payment_time)}}</div>
                     </div>
-                    <div v-if="selectedOrder.status == 2"
+                    <div v-if="selectedOrder.status == 2 || selectedOrder.status == 3"
                         class="item">
                         <div style="width:30%;">发货时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.shipped_time)}}</div>
@@ -137,6 +137,36 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="buttons">
+                        <b-link v-if="selectedOrder.status == 1"
+                            @click="popupTrackingNumber"
+                            class="order-button">
+                            填快递单号
+                        </b-link>
+                    </div>
+                </div>
+            </div>
+            <div class="card customer-info"
+                v-if="selectedOrder.status == 2 || selectedOrder.status == 3">
+                <div class="card-header header">
+                    <div style="width:80%">快递信息</div> 
+                </div>
+                <div class="card-body body">
+                    <div class="item">
+                        <div style="width:30%;">快递公司:</div>
+                        <div style="width:70%">{{getExpress(selectedOrder.express_company)}}</div>
+                    </div>
+                    <div class="item">
+                        <div style="width:30%;">快递单号:</div>
+                        <div style="width:70%">{{selectedOrder.tracking_number}}</div>
+                    </div>
+                    <div class="buttons">
+                        <b-link v-if="selectedOrder.status == 2"
+                            @click="setFinished"
+                            class="order-button">
+                            设为已收货
+                        </b-link>
                     </div>
                 </div>
             </div>
@@ -186,6 +216,45 @@
                 </div>
             </div>
         </b-modal>
+
+        <b-modal id="customer-info" title="快递单" size="sm"
+            hide-footer centered 
+            v-model="modalExpressShow"
+            v-if="selectedOrder != null">
+            <div class="card">
+                <div class="card-body body">
+                    <b-form @reset="onResetForm" ref="editorForm">
+                        <div class="item">
+                            <div style="width:30%;">快递公司:</div>
+                            <div style="width:70%">
+                                <b-form-select id="express_company"
+                                    v-model="expressForm.express_company" 
+                                    :options="optionsExpressCompany"
+                                    required>
+                                </b-form-select>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div style="width:30%;">快递单号:</div>
+                            <div style="width:70%">
+                                <b-form-input id="tracking_number"
+                                    v-model="expressForm.tracking_number"
+                                    placeholder="请输入快递单号"
+                                    required>
+                                </b-form-input>
+                            </div>
+                        </div>
+                        <div class="d-flex bg-senconday text-light align-items-center px-3 py-2">
+                            <b-button @click="saveExpress"
+                                variant="primary" size="md"
+                                style="margin-left:10px;margin-top:5px;">
+                                保存
+                            </b-button>
+                        </div>
+                    </b-form>
+                </div>
+            </div>
+        </b-modal>
     </b-container>
 </template>
 
@@ -196,7 +265,7 @@ import {
 } from 'mint-ui';
 
 import {
-    getOptionsStatus
+    getOptionsStatus, getExpressCompany
 } from 'api/config';
 
 import { 
@@ -204,7 +273,7 @@ import {
 } from "api/picture";
 
 import { 
-    getOrderList, getOrder
+    getOrderList, getOrder, saveExpress
 } from "api/order";
 
 export default {
@@ -218,6 +287,10 @@ export default {
                 search: null,
                 status: null
             },
+            expressForm: {
+                express_company: null,
+                tracking_number: null
+            },
             optionsStatus: [],
             fields: [],
             fieldsSimple: [
@@ -229,12 +302,14 @@ export default {
                 {
                     key: 'status',
                     label: '状态',
-                    class: 'W60'
+                    class: 'W60',
+                    sortable: true 
                 },
                 {
                     key: 'create_time',
                     label: '创建时间',
-                    class: 'W100'
+                    class: 'W100',
+                    sortable: true 
                 }
             ],
             fieldsAll: [
@@ -245,7 +320,8 @@ export default {
                 },
                 {
                     key: 'status',
-                    label: '状态'
+                    label: '状态',
+                    sortable: true 
                 },
                 {
                     key: 'name',
@@ -259,7 +335,8 @@ export default {
                 {
                     key: 'create_time',
                     label: '创建时间',
-                    class: 'W160'
+                    class: 'W160',
+                    sortable: true 
                 },
                 {
                     key: 'payment_time',
@@ -282,13 +359,16 @@ export default {
             selectedOrder: null,
             order_items: [],
             modalShow: false,
+            modalExpressShow: false,
             total: 0,
             currentPage: 1,
-            pageSize: 20
+            pageSize: 20,
+            optionsExpressCompany: []
         }
     },
     mounted() {
         this.optionsStatus = getOptionsStatus();
+        this.optionsExpressCompany = getExpressCompany();
         this.search();
         this.isMobile = this.getIsMobile();
         if(this.isMobile) {
@@ -305,7 +385,7 @@ export default {
         }
     },
     methods: {
-        getGender: function(value) {
+        getGender(value) {
             return this.getGenderString(value);
         },
         getStatus(value) {
@@ -356,6 +436,18 @@ export default {
             }
             return color;
         },
+        getExpress(value) {
+            let company = '';
+            switch(value) {
+                case "sf":
+                    company = '顺风快递';
+                    break;
+                case "ems":
+                    company = '邮政快递';
+                    break;
+            }
+            return company;
+        },
         dateFormat: function(time) {
             return this.dateFormatString(time);
         },
@@ -398,7 +490,6 @@ export default {
                     if(res.status == 200) {
                         let { data } = res.data;
                         this.order_items = data.order_items;
-                        // console.log(this.order_items);
                         this.order_items.forEach(orderItem => {
                             if(orderItem.picture_url) {
                                 orderItem.picture_url = getPicturePath(orderItem.picture_url);
@@ -410,6 +501,50 @@ export default {
                 this.selectedOrder = null;
             }
             this.modalShow = !this.modalShow;
+        },
+        popupTrackingNumber() {
+            this.modalExpressShow = !this.modalExpressShow;
+            this.onResetForm();
+        },
+        setFinished() {
+            MessageBox.confirm('确定设置此订单为已收货?').then(action => {
+                let saveObject = { 'method': "finish" };
+                saveExpress(this.selectedOrder.order_number, saveObject, response => {
+                    if(response.status == 200) {
+                        MessageBox('保存成功', '保存成功');
+                        this.selectedOrder.status = 3;
+                        this.selectedOrder.received_time = response.data.received_time;
+                    }
+                });
+            }).catch(()=>{});
+        },
+        onResetForm(event) {
+            if(event) {
+                event.preventDefault();
+            }
+            this.expressForm.express_company = null;
+            this.expressForm.tracking_number = null;
+        },
+        saveExpress() {
+            let form = this.$refs['editorForm'];
+            let valid = form.checkValidity();
+            if(valid) {
+                let saveObj = Object.assign({}, this.expressForm);
+                saveObj.method = "send";
+                saveExpress(this.selectedOrder.order_number, saveObj, response => {
+                    if(response.status == 200) {
+                        MessageBox('保存成功', '保存成功');
+                        this.modalExpressShow = !this.modalExpressShow;
+                        this.selectedOrder.status = 2;
+                        this.selectedOrder.express_company = this.expressForm.express_company;
+                        this.selectedOrder.tracking_number = this.expressForm.tracking_number;
+                        this.selectedOrder.shipped_time = response.data.shipped_time;
+                        this.onResetForm();
+                    }
+                });
+            } else {
+                MessageBox('保存失败', '保存失败，数据验证失败');
+            }
         }
     }
 }
@@ -486,5 +621,17 @@ export default {
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;
+}
+
+.buttons {
+    width: 100%;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.order-button {
+    width: 30%;
 }
 </style>
