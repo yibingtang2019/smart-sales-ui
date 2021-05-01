@@ -163,6 +163,11 @@
                     </div>
                     <div class="buttons">
                         <b-link v-if="selectedOrder.status == 2"
+                            @click="editTrackingNumber"
+                            class="order-button">
+                            修改快递单号
+                        </b-link>
+                        <b-link v-if="selectedOrder.status == 2"
                             @click="setFinished"
                             class="order-button">
                             设为已收货
@@ -225,8 +230,7 @@
                 <div class="card-body body">
                     <b-form @reset="onResetForm" ref="editorForm">
                         <div class="item">
-                            <div style="width:30%;">快递公司:</div>
-                            <div style="width:70%">
+                            <div style="width:100%">
                                 <b-form-select id="express_company"
                                     v-model="expressForm.express_company" 
                                     :options="optionsExpressCompany"
@@ -235,8 +239,7 @@
                             </div>
                         </div>
                         <div class="item">
-                            <div style="width:30%;">快递单号:</div>
-                            <div style="width:70%">
+                            <div style="width:100%">
                                 <b-form-input id="tracking_number"
                                     v-model="expressForm.tracking_number"
                                     placeholder="请输入快递单号"
@@ -505,6 +508,11 @@ export default {
         popupTrackingNumber() {
             this.modalExpressShow = !this.modalExpressShow;
             this.onResetForm();
+        },
+        editTrackingNumber() {
+            this.modalExpressShow = !this.modalExpressShow;
+            this.expressForm.express_company = this.selectedOrder.express_company;
+            this.expressForm.tracking_number = this.selectedOrder.tracking_number;
         },
         setFinished() {
             MessageBox.confirm('确定设置此订单为已收货?').then(action => {
