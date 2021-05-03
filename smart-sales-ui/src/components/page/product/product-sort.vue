@@ -34,8 +34,8 @@
                     </div>
                 </div>
             </div>
-            <div v-else>
-                <h5>没有产品</h5>
+            <div v-else style="margin:10px;">
+                <h6>没有产品</h6>
             </div>
             <div style="margin-top:10px;margin-bottom:10px;width:100%;text-align:center;">
                 <span>总数: {{total}} 个</span>
