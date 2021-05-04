@@ -381,8 +381,6 @@ export default {
                         }
                     });
                 }
-            } else {
-                this.selectedCustomer = null;
             }
             this.modalShow = !this.modalShow;
         },

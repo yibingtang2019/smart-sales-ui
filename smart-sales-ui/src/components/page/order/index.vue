@@ -42,6 +42,11 @@
                             {{getStatus(data.item.status)}}
                         </span>
                     </template>
+                    <template #cell(name)="data">
+                        <span>
+                            {{data.item.name == null ? data.item.nick_name : data.item.name}}
+                        </span>
+                    </template>
                     <template #cell(create_time)="data">
                         {{dateFormat(data.item.create_time)}}
                     </template>
@@ -121,6 +126,14 @@
                         class="item">
                         <div style="width:30%;">删除时间:</div>
                         <div style="width:70%">{{dateFormat(selectedOrder.deleted_time)}}</div>
+                    </div>
+                    <div class="item">
+                        <div style="width:30%;">总数量:</div>
+                        <div style="width:70%">{{totalCount}} 个</div>
+                    </div>
+                    <div class="item">
+                        <div style="width:30%;">总金额:</div>
+                        <div style="width:70%">{{totalAmount}} 元</div>
                     </div>
                     <div class="detail" v-if="order_items.length > 0">
                         <div v-for="order_item in order_items" :key="order_item.id" class="detail-item">
@@ -361,6 +374,8 @@ export default {
             selected: [],
             selectedOrder: null,
             order_items: [],
+            totalCount: 0,
+            totalAmount: 0,
             modalShow: false,
             modalExpressShow: false,
             total: 0,
@@ -485,6 +500,18 @@ export default {
                 "current_page": this.currentPage
             };
         },
+        getTotal() {
+            if(this.order_items != null && this.order_items.length > 0) {
+                let totalCount = 0;
+                let totalAmount = 0;
+                this.order_items.forEach(item => {
+                    totalCount += item.count;
+                    totalAmount += item.count * item.price;
+                });
+                this.totalCount = totalCount;
+                this.totalAmount = totalAmount;
+            }
+        },
         onRowSelected(items) {
             this.selected = items;
             if(this.selected.length > 0) {
@@ -498,10 +525,9 @@ export default {
                                 orderItem.picture_url = getPicturePath(orderItem.picture_url);
                             }
                         });
+                        this.getTotal();
                     }
                 });
-            } else {
-                this.selectedOrder = null;
             }
             this.modalShow = !this.modalShow;
         },
