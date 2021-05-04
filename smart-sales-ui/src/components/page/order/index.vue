@@ -206,14 +206,14 @@
                         <div style="width:30%;">昵称:</div>
                         <div style="width:70%">{{selectedOrder.nick_name}}</div>
                     </div>
-                    <div class="item">
+                    <div v-if="selectedFeedback.customer_tel != null" class="item">
                         <div style="width:30%;">手机号码:</div>
-                        <div style="width:70%">{{selectedOrder.tel}}</div>
+                        <div style="width:70%">{{selectedFeedback.customer_tel}}</div>
                     </div>
-                    <div v-if="selectedOrder.weixin != ''" 
+                    <div v-if="selectedFeedback.weixin != null" 
                         class="item">
                         <div style="width:30%;">微信:</div>
-                        <div style="width:70%">{{selectedOrder.weixin}}</div>
+                        <div style="width:70%">{{selectedFeedback.weixin}}</div>
                     </div>
                     <div class="item">
                         <div style="width:30%;">性别:</div>
