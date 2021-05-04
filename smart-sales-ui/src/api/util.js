@@ -84,6 +84,24 @@ export default {
             }
         }
 
+        Vue.prototype.getCategoryString = function(value) {
+            if(value == 0) {
+                return '未知';
+            }
+            if(value == 1) {
+                return '商品相关';
+            }
+            if(value == 2) {
+                return '物流相关';
+            }
+            if(value == 3) {
+                return '客户服务相关';
+            }
+            if(value == 4) {
+                return '其它';
+            }
+        }
+
         Vue.prototype.getLocalItem = getLocalItem;
         Vue.prototype.setLocalItem = setLocalItem;
         Vue.prototype.removeLocalItem = removeLocalItem;

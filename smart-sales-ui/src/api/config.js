@@ -45,3 +45,11 @@ export const getExpressCompany = () => {
         { value: 'ems', text: '邮政快递' }
     ];
 }
+
+export const getOptionsIsReplied = () => {
+    return [
+        { value: null, text: '请选择反馈状态' },
+        { value: 'True', text: '已回复' },
+        { value: 'False', text: '未回复' }
+    ];
+}

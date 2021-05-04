@@ -74,7 +74,7 @@
             <h6>没有订单</h6>
         </div>
 
-        <b-modal id="order-info" title="订单信息:" size="lg"
+        <b-modal id="order-info" title="订单信息" size="lg"
             hide-footer
             v-model="modalShow"
             v-if="selectedOrder != null">
@@ -225,7 +225,7 @@
                     </div>
                     <div class="item">
                         <div style="width:30%;">加入时间:</div>
-                        <div style="width:70%">{{dateFormat(selectedOrder.create_time)}}</div>
+                        <div style="width:70%">{{dateFormat(selectedOrder.customer_create_time)}}</div>
                     </div>
                     <div class="item">
                         <div style="width:30%;">登录时间:</div>
@@ -663,6 +663,7 @@ export default {
     flex-direction:row;
     justify-content:space-between;
     align-items:center;
+    margin-top: 10px;
 }
 
 .order-button {

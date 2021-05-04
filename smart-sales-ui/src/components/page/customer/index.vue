@@ -88,8 +88,7 @@
                 </b-table>
             </div>
             <div v-if="selectedFeedback != null" style="margin-top:10px;margin-bottom:10px;">
-                <div style="height:28px;line-height:28px;margin-bottom:10px;margin-left:10px;"
-                    v-if="selectedFeedback.is_replied == true">
+                <div style="height:28px;line-height:28px;margin-bottom:10px;margin-left:10px;">
                     反馈时间: {{dateFormat(selectedFeedback.create_time)}} 
                     <img :src="`${publicPath}arrow-up.png`" alt="" style="height:28px;width:20px;cursor:pointer;margin-left:5px;"
                         v-if="selectedFeedback != null" 
@@ -233,32 +232,32 @@ export default {
             feedbackFields: [],
             feedbackFieldsSimple: [
                 {
+                    key: 'is_replied',
+                    label: '状态',
+                    sortable: true 
+                },
+                {
                     key: 'category',
                     label: '类别'
                 },
                 {
                     key: 'tel',
                     label: '手机号码'
-                },
-                {
-                    key: 'is_replied',
-                    label: '状态',
-                    sortable: true 
                 }
             ],
             feedbackFieldsAll: [
                 {
+                    key: 'is_replied',
+                    label: '状态',
+                    sortable: true 
+                },
+                {
                     key: 'category',
                     label: '类别'
                 },
                 {
                     key: 'tel',
                     label: '手机号码'
-                },
-                {
-                    key: 'is_replied',
-                    label: '状态',
-                    sortable: true 
                 },
                 {
                     key: 'create_time',
@@ -313,21 +312,7 @@ export default {
             return this.getGenderString(value);
         },
         getCategory(value) {
-            if(value == 0) {
-                return '未知';
-            }
-            if(value == 1) {
-                return '商品相关';
-            }
-            if(value == 2) {
-                return '物流相关';
-            }
-            if(value == 3) {
-                return '客户服务相关';
-            }
-            if(value == 4) {
-                return '其它';
-            }
+            return this.getCategoryString(value);
         },
         getStatusColor(is_replied) {
             return is_replied ? "#28a745" : "#007bff";
@@ -407,9 +392,7 @@ export default {
         setReplied() {
             if(this.selectedFeedback != null) {
                 let _this = this;
-                console.log(this.selectedFeedback);
                 MessageBox.confirm('确定设置此反馈为已回复?').then(action => {
-                    // debugger;
                     replyFeedback(_this.selectedFeedback.id, response => {
                         if(response.status == 200) {
                             MessageBox('保存成功', '保存成功');

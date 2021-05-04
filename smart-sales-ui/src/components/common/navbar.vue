@@ -12,6 +12,7 @@
                             <b-dropdown-item href="#" @click="homeSort">产品排序管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="customers">客户信息管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="orders">订单信息管理</b-dropdown-item>
+                            <b-dropdown-item href="#" @click="feedbacks">反馈信息管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="profile">当前登录用户</b-dropdown-item>
                             <b-dropdown-item href="#" @click="quit">退出</b-dropdown-item>
                         </b-nav-item-dropdown>
@@ -39,6 +40,7 @@ export default {
                 let _this = this;
                 setTimeout(() => {
                     _this.menuItem = _this.$router.currentRoute.meta.title;
+                    document.title = "韵晴皮具信息管理系统 - " + _this.menuItem;
                 }, 1000);
             }
         },
@@ -56,6 +58,10 @@ export default {
         },
         orders() {
             this.$router.push("/order");
+            this.setMenuItem();
+        },
+        feedbacks() {
+            this.$router.push("/feedback");
             this.setMenuItem();
         },
         profile() {
