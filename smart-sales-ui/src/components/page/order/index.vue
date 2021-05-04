@@ -65,8 +65,8 @@
                 </b-pagination>
             </div>
         </div>
-        <div v-else>
-            <h5>没有订单</h5>
+        <div v-else style="margin:10px;">
+            <h6>没有订单</h6>
         </div>
 
         <b-modal id="customer-info" title="订单信息:" size="lg"
