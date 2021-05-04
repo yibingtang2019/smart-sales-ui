@@ -88,7 +88,8 @@
                 </b-table>
             </div>
             <div v-if="selectedFeedback != null" style="margin-top:10px;margin-bottom:10px;">
-                <div style="height:28px;line-height:28px;margin-bottom:10px;margin-left:10px;">
+                <div style="height:28px;line-height:28px;margin-bottom:10px;margin-left:10px;"
+                    v-if="selectedFeedback.is_replied == true">
                     反馈时间: {{dateFormat(selectedFeedback.create_time)}} 
                     <img :src="`${publicPath}arrow-up.png`" alt="" style="height:28px;width:20px;cursor:pointer;margin-left:5px;"
                         v-if="selectedFeedback != null" 
@@ -105,6 +106,13 @@
                     max-rows="12"
                     disabled>
                 </b-form-textarea>
+                <div class="buttons">
+                    <b-link v-if="selectedFeedback.is_replied == false"
+                        @click="setReplied"
+                        class="order-button">
+                        设为已回复
+                    </b-link>
+                </div>
             </div>
             <div style="height:30px;line-height:30px;margin-top:10px;margin-bottom:10px;">客户收藏</div>
             <div v-if="likes != null && likes.length > 0" 
@@ -138,7 +146,7 @@ import {
 } from "api/customer";
 
 import {
-    getFeedbackList
+    getFeedbackList, replyFeedback
 } from "api/feedback";
 
 import {
@@ -343,6 +351,7 @@ export default {
                     this.total = response.data.total;
                 }
                 Indicator.close();
+                this.selectedFeedback = null;
             });
         },
         getFilter() {
@@ -378,6 +387,7 @@ export default {
                     getFeedbackList(query_feedbacks_data, respFeedbacks => {
                         if(respFeedbacks.status == 200) {
                             this.feedbacks = respFeedbacks.data.data;
+                            this.selectedFeedback = null;
                         }
                     });
                 }
@@ -387,6 +397,22 @@ export default {
         onFeedbackRowSelected(items) {
             if(items.length > 0) {
                 this.selectedFeedback = items[0];
+            }
+        },
+        setReplied() {
+            if(this.selectedFeedback != null) {
+                let _this = this;
+                console.log(this.selectedFeedback);
+                MessageBox.confirm('确定设置此反馈为已回复?').then(action => {
+                    // debugger;
+                    replyFeedback(_this.selectedFeedback.id, response => {
+                        if(response.status == 200) {
+                            MessageBox('保存成功', '保存成功');
+                            _this.selectedFeedback.is_replied = true;
+                            _this.selectedFeedback.reply_time = response.data.reply_time;
+                        }
+                    });
+                }).catch(()=>{});
             }
         }
     }
@@ -455,5 +481,18 @@ export default {
 #feedback-content {
     overflow-y: hidden !important;
     background-color: #FFF;
+}
+
+.buttons {
+    width: 100%;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    margin-top: 10px;
+}
+
+.order-button {
+    width: 30%;
 }
 </style>

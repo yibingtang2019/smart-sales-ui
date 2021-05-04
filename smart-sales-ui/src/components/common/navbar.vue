@@ -12,7 +12,7 @@
                             <b-dropdown-item href="#" @click="homeSort">产品排序管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="customers">客户信息管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="orders">订单信息管理</b-dropdown-item>
-                            <b-dropdown-item href="#" @click="profile">登录用户</b-dropdown-item>
+                            <b-dropdown-item href="#" @click="profile">当前登录用户</b-dropdown-item>
                             <b-dropdown-item href="#" @click="quit">退出</b-dropdown-item>
                         </b-nav-item-dropdown>
                     </b-navbar-nav>
