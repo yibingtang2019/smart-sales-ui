@@ -318,14 +318,12 @@ export default {
                 {
                     key: 'status',
                     label: '状态',
-                    class: 'W60',
-                    sortable: true 
+                    class: 'W60'
                 },
                 {
                     key: 'create_time',
                     label: '创建时间',
-                    class: 'W100',
-                    sortable: true 
+                    class: 'W100'
                 }
             ],
             fieldsAll: [
@@ -336,8 +334,7 @@ export default {
                 },
                 {
                     key: 'status',
-                    label: '状态',
-                    sortable: true 
+                    label: '状态'
                 },
                 {
                     key: 'name',
@@ -351,8 +348,7 @@ export default {
                 {
                     key: 'create_time',
                     label: '创建时间',
-                    class: 'W160',
-                    sortable: true 
+                    class: 'W160'
                 },
                 {
                     key: 'payment_time',
