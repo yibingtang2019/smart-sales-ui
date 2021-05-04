@@ -74,11 +74,11 @@
             <h6>没有订单</h6>
         </div>
 
-        <b-modal id="customer-info" title="订单信息:" size="lg"
+        <b-modal id="order-info" title="订单信息:" size="lg"
             hide-footer
             v-model="modalShow"
             v-if="selectedOrder != null">
-            <div class="card customer-info">
+            <div class="card order-info">
                 <div class="card-header header">
                     <div style="width:80%">订单编号: {{selectedOrder.order_number}}</div> 
                     <div :style="{color: getStatusColor(selectedOrder.status)}">
@@ -160,7 +160,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card customer-info"
+            <div class="card order-info"
                 v-if="selectedOrder.status == 2 || selectedOrder.status == 3">
                 <div class="card-header header">
                     <div style="width:80%">快递信息</div> 
@@ -235,7 +235,7 @@
             </div>
         </b-modal>
 
-        <b-modal id="customer-info" title="快递单" size="sm"
+        <b-modal id="order-info" title="快递单" size="sm"
             hide-footer centered 
             v-model="modalExpressShow"
             v-if="selectedOrder != null">
@@ -585,7 +585,7 @@ export default {
 </script>
 
 <style scoped>
-.customer-info {
+.order-info {
     margin:5px 10px;
     width:95%;
 }

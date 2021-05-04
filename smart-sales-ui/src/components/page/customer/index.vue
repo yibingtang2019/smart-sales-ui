@@ -297,6 +297,11 @@ export default {
             this.showAllFeedback = true;
             this.feedbackFields = this.feedbackFieldsAll;
         }
+        this.$root.$on('bv::modal::hidden', (bvEvent, modalId) => {
+            if(modalId == 'customer-info') {
+                this.selectedFeedback = null;
+            }
+        });
     },
     watch: {
         currentPage: function(newValue, oldValue) {
