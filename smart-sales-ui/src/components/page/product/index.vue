@@ -52,10 +52,10 @@
 
         <div v-if="products.length" 
             style="margin:5px;">
-            <b-row style="justify-content:flex-start;">
+            <b-row style="display:flex;justify-content:center;">
                 <div v-for="product in products" 
                     v-bind:key="product.product_code" 
-                    style="margin:13px;">
+                    style="margin:5px;">
                     <b-col l="4">
                         <b-card v-bind:title="product.product_code"
                             v-bind:img-src="product.picture_url"

@@ -40,6 +40,11 @@ export default new Router({
                     meta: { title: '订单信息管理', auth: true }
                 },
                 {
+                    path: '/order-statistic',
+                    component: resolve => require(['components/page/order/stats.vue'], resolve),
+                    meta: { title: '订单信息统计', auth: true }
+                },
+                {
                     path: '/feedback',
                     component: resolve => require(['components/page/feedback/index.vue'], resolve),
                     meta: { title: '反馈信息管理', auth: true }

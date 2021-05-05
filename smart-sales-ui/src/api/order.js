@@ -13,3 +13,7 @@ export const getOrder = (order_number, resolve) => {
 export const saveExpress = (order_number, data, resolve) => {
     return request(`${process.env.VUE_APP_API_URL}/order/${order_number}`, "put", data, resolve);
 }
+
+export const getOrderStatistic = (resolve) => {
+    return request(`${process.env.VUE_APP_API_URL}/order/statistic`, "get", {}, resolve);
+}

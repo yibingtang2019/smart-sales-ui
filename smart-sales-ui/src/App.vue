@@ -61,8 +61,4 @@ export default {
     white-space: nowrap;
     word-break:keep-all;
 }
-
-.custom-select {
-    font-size: 0.8rem !important;
-}
 </style>
