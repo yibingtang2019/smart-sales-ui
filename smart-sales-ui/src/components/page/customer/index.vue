@@ -64,6 +64,52 @@
         <b-modal id="customer-info" title="客户信息" size="lg"
             hide-footer
             v-model="modalShow">
+            <div class="card" style="margin:5px 10px;width:95%;"
+                v-if="selectedCustomer != null">
+                <div class="card-header">
+                    <div>
+                        <b-img thumbnail fluid :src="selectedCustomer.avatar_url" 
+                            center lazy width="50" height="50" rounded="circle"
+                            v-if="selectedCustomer.avatar_url != ''">
+                        </b-img>
+                    </div>
+                </div>
+                <div class="card-body body">
+                    <div class="item">
+                        <div v-if="selectedCustomer.name != null" style="width:30%;">姓名:</div>
+                        <div style="width:70%">{{selectedCustomer.name}}</div>
+                    </div>
+                    <div class="item">
+                        <div style="width:30%;">昵称:</div>
+                        <div style="width:70%">{{selectedCustomer.nick_name}}</div>
+                    </div>
+                    <div v-if="selectedCustomer.customer_tel != null" class="item">
+                        <div style="width:30%;">手机号码:</div>
+                        <div style="width:70%">{{selectedCustomer.customer_tel}}</div>
+                    </div>
+                    <div v-if="selectedCustomer.weixin != null" 
+                        class="item">
+                        <div style="width:30%;">微信:</div>
+                        <div style="width:70%">{{selectedCustomer.weixin}}</div>
+                    </div>
+                    <div class="item">
+                        <div style="width:30%;">性别:</div>
+                        <div style="width:70%">{{getGender(selectedCustomer.gender)}}</div>
+                    </div>
+                    <div class="item">
+                        <div style="width:30%;">所在地:</div>
+                        <div style="width:70%">{{selectedCustomer.province}} {{selectedCustomer.city}}</div>
+                    </div>
+                    <div class="item">
+                        <div style="width:30%;">加入时间:</div>
+                        <div style="width:70%">{{dateFormat(selectedCustomer.create_time)}}</div>
+                    </div>
+                    <div class="item">
+                        <div style="width:30%;">登录时间:</div>
+                        <div style="width:70%">{{dateFormat(selectedCustomer.last_login_time)}}</div>
+                    </div>
+                </div>
+            </div>
             <div class="feedback-header">
                 <div style="width:20%">客户反馈</div>
             </div>
@@ -482,5 +528,22 @@ export default {
 
 .order-button {
     width: 30%;
+}
+
+.body {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.item {
+    width:100%;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
 }
 </style>

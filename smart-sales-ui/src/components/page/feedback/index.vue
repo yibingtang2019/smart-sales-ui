@@ -121,7 +121,7 @@
                     </div>
                 </div>
                 <div class="card-body body">
-                    <div class="item">
+                    <div v-if="selectedFeedback.name != null" class="item">
                         <div style="width:30%;">姓名:</div>
                         <div style="width:70%">{{selectedFeedback.name}}</div>
                     </div>
