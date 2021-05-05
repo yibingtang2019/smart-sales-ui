@@ -208,9 +208,9 @@ export default {
             let form = this.$refs['editorForm'];
             let valid = form.checkValidity();
             if(valid) {
-                valid = this.editForm.content.length <= 26;
+                valid = this.editForm.content.length <= 500;
                 if(valid == false) {
-                    MessageBox('保存失败', '内容不能超过26个字符');
+                    MessageBox('保存失败', '内容不能超过500个字符');
                     return;
                 }
             }
