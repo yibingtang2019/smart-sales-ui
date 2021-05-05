@@ -14,6 +14,7 @@
                             <b-dropdown-item href="#" @click="orders">订单信息管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="orderstats">订单信息统计</b-dropdown-item>
                             <b-dropdown-item href="#" @click="feedbacks">反馈信息管理</b-dropdown-item>
+                            <b-dropdown-item href="#" @click="notices">公告信息管理</b-dropdown-item>
                             <b-dropdown-item href="#" @click="profile">当前登录用户</b-dropdown-item>
                             <b-dropdown-item href="#" @click="quit">退出</b-dropdown-item>
                         </b-nav-item-dropdown>
@@ -68,6 +69,10 @@ export default {
         },
         feedbacks() {
             this.$router.push("/feedback");
+            this.setMenuItem();
+        },
+        notices() {
+            this.$router.push("/notice");
             this.setMenuItem();
         },
         profile() {

@@ -48,6 +48,11 @@ export default new Router({
                     path: '/feedback',
                     component: resolve => require(['components/page/feedback/index.vue'], resolve),
                     meta: { title: '反馈信息管理', auth: true }
+                },
+                {
+                    path: '/notice',
+                    component: resolve => require(['components/page/notice/index.vue'], resolve),
+                    meta: { title: '公告信息管理', auth: true }
                 }
             ]
         },

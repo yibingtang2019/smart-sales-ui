@@ -291,14 +291,14 @@
                     <b-form-group id="groupCreatedTime" label="创建时间:" label-for="createdTime" v-if="editForm.id > 0">
                         <b-form-input
                             id="createdTime"
-                            v-model.number="editForm.createdTime"
+                            v-model="editForm.createdTime"
                             :disabled="disabled">
                         </b-form-input>
                     </b-form-group>
                     <b-form-group id="groupUpdatedTime" label="修改时间:" label-for="updatedTime" v-if="editForm.id > 0">
                         <b-form-input
                             id="updatedTime"
-                            v-model.number="editForm.updatedTime"
+                            v-model="editForm.updatedTime"
                             :disabled="disabled">
                         </b-form-input>
                     </b-form-group>
