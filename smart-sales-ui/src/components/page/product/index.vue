@@ -617,7 +617,7 @@ export default {
             this.editForm.countStore = 0;
             this.editForm.countSale = 0;
             this.editForm.isOnSale = false;
-            this.editForm.isOnSale = false;
+            this.editForm.isHome = false;
             this.editForm.isNew = false;
             this.editForm.isRecommend = false;
             this.editForm.description = '';

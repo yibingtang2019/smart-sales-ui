@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         checkFormat(value) {
-            let reg = /^[0-9a-zA-Z]*$/;
+            let reg = /^[0-9a-zA-Z!]*$/;
             return reg.test(value);
         },
         onSubmit(event) {
