@@ -2,7 +2,13 @@
     <div style="margin:5px;">
         <div class="stat-container">
             <div class="item">
-                <div id="chartPie" class="pie-wrap"></div>
+                <div id="lineWeekChart" class="chart-wrap" ></div>
+            </div>
+            <div class="item">
+                <div id="lineMonthChart" class="chart-wrap" ></div>
+            </div>
+            <div class="item">
+                <div id="chartPie" class="chart-wrap"></div>
             </div>
         </div>
     </div>
@@ -23,20 +29,51 @@ import {
 export default {
     data() {
         return {
-            stats: [],
             statsData: [],
-            chartPie: null
+            weekData: [],
+            monthData: [],
+            weekDays: [],
+            monthDays: [],
+            chartPie: null,
+            lineWeekChart: null,
+            lineMonthChart: null
         }
     },
     mounted() {
         this.$nextTick(() => {
+            this.getLineChartXData(7);
+            this.getLineChartXData(30);
             this.getStats();
         });
     },
     methods: {
+        getLineChartXData(days) {
+            var now = new Date();
+            var currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() - days);
+            var dates = [];
+            while(currentDate < now) {
+                dates.push(this.getDate(currentDate));
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            if(days == 7) {
+                this.weekDays = dates;
+            } else if(days == 30) {
+                this.monthDays = dates;
+            }
+        },
+        getDate(time) {
+            var t = new Date(time);
+            var year = t.getFullYear();
+            var month = t.getMonth() + 1;
+            var day = t.getDate();
+            var newTime = year + '-' +
+                (month < 10 ? '0' + month : month) + '-' +
+                (day < 10 ? '0' + day : day);
+            return newTime;
+        },
         getStats() {
-            Indicator.open({ text: '加载中...', spinnerType: 'fading-circle' });
-            getOrderStatistic(response => {
+            getOrderStatistic({ method: "status" }, response => {
                 if(response.status == 200) {
                     let stats = response.data.data;
                     if(stats[0] > 0) {
@@ -59,7 +96,20 @@ export default {
                     }
                     this.drawPieChart();
                 }
-                Indicator.close();
+            });
+
+            getOrderStatistic({ method: "week" }, response => {
+                if(response.status == 200) {
+                    this.weekData = response.data.data;
+                    this.drawWeekLine();
+                }
+            });
+
+            getOrderStatistic({ method: "month" }, response => {
+                if(response.status == 200) {
+                    this.monthData = response.data.data;
+                    this.drawMonthLine();
+                }
             });
         },
         drawPieChart() {
@@ -77,7 +127,7 @@ export default {
             this.chartPie = echarts.init(document.getElementById('chartPie'),'macarons');
             this.chartPie.setOption({
                 title: {
-                    text: '订单状态统计',
+                    text: '实时订单状态统计',
                     subtext: '',
                     x: 'center'
                 },
@@ -106,6 +156,38 @@ export default {
                     }
                 ]
             });
+        },
+        drawWeekLine() {
+            this.lineWeekChart = echarts.init(document.getElementById('lineWeekChart'));
+            this.lineWeekChart.setOption({
+                title: { text: '过去七日付款订单', x: 'center' },
+                tooltip: { trigger: 'axis' },
+                xAxis: {
+                    data: this.weekDays
+                },
+                yAxis: {},
+                series: [{
+                    name: '销量',
+                    type: 'line',
+                    data: this.weekData
+                }]
+            });
+        },
+        drawMonthLine() {
+            this.lineMonthChart = echarts.init(document.getElementById('lineMonthChart'));
+            this.lineMonthChart.setOption({
+                title: { text: '过去三十日付款订单', x: 'center' },
+                tooltip: {},
+                xAxis: {
+                    data: this.monthDays
+                },
+                yAxis: {},
+                series: [{
+                    name: '销量',
+                    type: 'line',
+                    data: this.monthData
+                }]
+            });
         }
     }
 }
@@ -126,7 +208,7 @@ export default {
     width:100%;
 }
 
-.pie-wrap{
+.chart-wrap{
     width:100%;
     height:400px;
 }
