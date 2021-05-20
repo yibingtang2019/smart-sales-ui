@@ -43,6 +43,10 @@ const err = (error) => {
 }
 
 const handleError = (res) => {
+    if(res == undefined || res.response == undefined || res.response.status == undefined) {
+        setTimeout(() => { MintUI.Indicator.close(); }, 1000);
+        return;
+    }
     if(res.response.status != 404 && res.response.status != 401) {
         let errorMessage = "";
         if(res.response.data && res.response.data.errors) {
