@@ -1,38 +1,43 @@
 <template>
-    <div class="card" style="margin:20px auto;width:90%">
-        <div class="card-header" style="text-align:center;background-color:#28a745;color:#fff">
-            登录
+    <div>
+        <div class="card" style="margin:20px auto;width:90%">
+            <div class="card-header" style="text-align:center;background-color:#28a745;color:#fff;font-size:18px;">
+                韵晴皮具销售管理系统登录
+            </div>
+            <div class="card-body">
+                <b-form @submit="onSubmit" @reset="onReset">
+                    <b-form-group id="groupUserName" label="登录用户名:" label-for="userName">
+                        <b-form-input
+                            id="userName"
+                            v-model="form.userName"
+                            placeholder="请输入登录用户名"
+                            required>
+                        </b-form-input>
+                        <b-form-invalid-feedback :state="checkFormat(this.form.userName)">
+                            格式不正确
+                        </b-form-invalid-feedback>
+                    </b-form-group>
+                    <b-form-group id="groupPassword" label="密码:" label-for="password">
+                        <b-form-input
+                            id="password"
+                            v-model="form.password"
+                            type="password"
+                            placeholder="请输入登录密码"
+                            required>
+                        </b-form-input>
+                        <b-form-invalid-feedback :state="checkFormat(this.form.password)">
+                            格式不正确
+                        </b-form-invalid-feedback>
+                    </b-form-group>
+                    <div style="text-align:center">
+                        <b-button type="submit" variant="primary" style="margin-right:5px;">确定</b-button>
+                        <b-button type="reset" variant="secondary" style="margin-left:5px;">重置</b-button>
+                    </div>
+                </b-form>
+            </div>
         </div>
-        <div class="card-body">
-            <b-form @submit="onSubmit" @reset="onReset">
-                <b-form-group id="groupUserName" label="登录用户名:" label-for="userName">
-                    <b-form-input
-                        id="userName"
-                        v-model="form.userName"
-                        placeholder="请输入登录用户名"
-                        required>
-                    </b-form-input>
-                    <b-form-invalid-feedback :state="checkFormat(this.form.userName)">
-                        格式不正确
-                    </b-form-invalid-feedback>
-                </b-form-group>
-                <b-form-group id="groupPassword" label="密码:" label-for="password">
-                    <b-form-input
-                        id="password"
-                        v-model="form.password"
-                        type="password"
-                        placeholder="请输入登录密码"
-                        required>
-                    </b-form-input>
-                    <b-form-invalid-feedback :state="checkFormat(this.form.password)">
-                        格式不正确
-                    </b-form-invalid-feedback>
-                </b-form-group>
-                <div style="text-align:center">
-                    <b-button type="submit" variant="primary" style="margin-right:5px;">确定</b-button>
-                    <b-button type="reset" variant="secondary" style="margin-left:5px;">重置</b-button>
-                </div>
-            </b-form>
+        <div style="text-align:center;margin-top:30px;">
+            粤ICP备20062281号 | Copyright © 2021
         </div>
     </div>
 </template>
