@@ -8,7 +8,7 @@
                             <b-form-group id="groupName" label="" label-for="search">
                                 <b-form-input id="search"
                                     v-model="form.search"
-                                    placeholder="请输入客户姓名/昵称/手机号码/微信">
+                                    placeholder="请输入客户姓名/昵称/手机号码">
                                 </b-form-input>
                             </b-form-group>
                             <div style="text-align:right">
@@ -86,11 +86,6 @@
                     <div v-if="selectedCustomer.customer_tel != null" class="item">
                         <div style="width:30%;">手机号码:</div>
                         <div style="width:70%">{{selectedCustomer.customer_tel}}</div>
-                    </div>
-                    <div v-if="selectedCustomer.weixin != null" 
-                        class="item">
-                        <div style="width:30%;">微信:</div>
-                        <div style="width:70%">{{selectedCustomer.weixin}}</div>
                     </div>
                     <div class="item">
                         <div style="width:30%;">性别:</div>
@@ -260,10 +255,6 @@ export default {
                 {
                     key: 'tel',
                     label: '手机号码'
-                },
-                {
-                    key: 'weixin',
-                    label: '微信'
                 },
                 {
                     key: 'create_time',
