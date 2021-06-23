@@ -115,8 +115,8 @@ export default {
     },
     mounted() {
         if(process.env.NODE_ENV == 'development') {
-            this.form.userName = 'admin';
-            this.form.password = 'password';
+            this.form.userName = 'dtang';
+            this.form.password = 'P4ssw0rd2021!';
         }
         this.clearLocalItems();
 
