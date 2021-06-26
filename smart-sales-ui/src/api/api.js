@@ -240,7 +240,7 @@ export const requestUpload = async (url, file, resolve, reject = null) => {
 const checkIsExpired = () => {
     let login_date = getLocalItem('login_time');
         if(login_date != undefined) {
-        let expired_date = new Date(new Date(login_date).setHours(new Date(login_date).getHours() + 8));
+        let expired_date = new Date(new Date(login_date).setHours(new Date(login_date).getHours() + 2));
         let now = new Date();
         return (expired_date < now);
     } else {
