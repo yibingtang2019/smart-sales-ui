@@ -341,7 +341,7 @@ export default {
                     label: '姓名'
                 },
                 {
-                    key: 'tel',
+                    key: 'customer_tel',
                     label: '手机号码',
                     class: 'W120'
                 },
